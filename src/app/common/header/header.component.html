@@ -1,0 +1,59 @@
+<div class="header-container">
+  <a routerLink="/home">
+    <img class="logo" src="../../favicon.ico" alt="">
+  </a>
+  <button
+    *ngIf="!isWalletConnected"
+    class="button-primary"
+    (click)="openWalletSelector()"
+  >
+    <span class="iconify" data-icon="mingcute:wallet-3-line"></span>
+    Sign in
+  </button>
+  <div *ngIf="isWalletConnected" class="signed-in-container">
+    <button
+      mat-button
+      class="wallet-details-button"
+      (click)="openProfile()"
+    >
+      <img
+        class="wallet-icon"
+        [src]="walletIconSafeUrl"
+      />
+      {{ truncatedAddress }}
+    </button>
+    <button
+      #toggleMenu
+      class="button-secondary toggle-menu-button"
+      (click)="showMenu(true)"
+    >
+      {{ currentCluster }}
+      <span class="iconify" data-icon="ci:chevron-big-right"></span>
+      <div
+        *ngIf="isShowingMenu"
+        class="toggle-menu"
+      >
+        <p class="toggle-menu-item" (click)="setClusterToMainnet()">
+          <span class="iconify" data-icon="tabler:currency-solana"></span>
+          Mainnet
+        </p>
+        <div class="toggle-menu-divider"></div>
+        <p class="toggle-menu-item" (click)="setClusterToDevnet()">
+          <span class="iconify" data-icon="tabler:currency-solana"></span>
+          Devnet
+        </p>
+        <div class="toggle-menu-divider"></div>
+        <p class="toggle-menu-item red" (click)="signOut()">
+          <span class="iconify" data-icon="uil:signout"></span>
+          Sign out
+        </p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<app-wallet-selector
+  [isModalOpen]="isWalletSelectorOpen"
+  (closeEvent)="closeWalletSelector($event)"
+  (walletNameEmitter)="onSelectWallet($event)"
+></app-wallet-selector>

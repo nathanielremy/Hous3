@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <meta content="description" name="description" />
+    <meta name="google" content="notranslate" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon.ico" />
+    <link href="../../../favicon.ico" rel="icon" />
+
+    <title>Create Token</title>
+  </head>
+  <body class="createTokenBody">
+    <app-header></app-header>
+    <div class="w-full flex flex-col items-center">
+      <div class="divider"></div>
+      <div class="content-container">
+        <div class="page-title-wrapper">
+          <h3 class="page-title">Create a Token</h3>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="input-container">
+        <div class="image-container">
+          <div class="image-content">
+            <div class="image-wrapper">
+              <img *ngIf="selectedImageUrl" [src]="selectedImageUrl" alt=""/>
+              <p
+                *ngIf="!selectedImageUrl"
+                class="input-sub-title text-clickable"
+                (click)="openFileSelector(fileSelector)"
+              >
+                Choose file
+              </p>
+            </div>
+            <p class="input-sub-title">
+              Jpg, png & gif only<br>Max size: 10MB
+            </p>
+          </div>
+          <button
+            class="button-secondary file-selector-button"
+            [disabled]="isCreatingToken"
+            (click)="openFileSelector(fileSelector)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-cloud-arrow-up-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2z"
+              />
+            </svg>
+            <span *ngIf="!selectedImageUrl">Choose file</span>
+            <span *ngIf="selectedImageUrl">Replace file</span>
+          </button>
+        </div>
+        <div class="input-wrapper">
+          <p class="input-title">Name</p>
+          <input
+            class="default-input"
+            type="text"
+            maxlength="32"
+            placeholder="Token name"
+            [disabled]="isCreatingToken"
+            [(ngModel)]="tokenName"
+          />
+          <p class="input-sub-title">The name that will be displayed for this token.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Description</p>
+          <textarea
+            class="default-textarea"
+            maxlength="280"
+            placeholder="Token description"
+            [disabled]="isCreatingToken"
+            [(ngModel)]="tokenDescription"
+          ></textarea>
+          <p class="input-sub-title">The description that will be displayed for this token.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Symbol</p>
+          <input
+            class="default-input"
+            type="text"
+            maxlength="10"
+            placeholder="Token symbol"
+            [disabled]="isCreatingToken"
+            [(ngModel)]="tokenSymbol"
+          />
+          <p class="input-sub-title">The symbol that will be displayed for this token.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Url</p>
+          <input
+            class="default-input"
+            type="text"
+            maxlength="750"
+            placeholder="https://www.mywebsite.com"
+            [disabled]="isCreatingToken"
+            [(ngModel)]="tokenUrl"
+          />
+          <p class="input-sub-title">The url that will be displayed for this token.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Supply</p>
+          <input
+            class="default-input"
+            type="number"
+            placeholder="0"
+            [disabled]="isCreatingToken"
+            [(ngModel)]="tokenSupply"
+          />
+          <p class="input-sub-title">The supply of the token. After creation, these will be available in your wallet.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Decimals</p>
+          <div class="decimals-wrapper">
+            <div
+              *ngFor="let item of [].constructor(10); let idx = index"
+              class="decimals-item"
+              [ngClass]="{ 'selected-decimals-item': decimals == idx }"
+              (click)="setDecimals(idx)"
+            >
+              <p class="input-title">{{ idx }}</p>
+            </div>
+          </div>
+          <p class="input-sub-title">The decimal places for this token. ie, SOL has 9, NFTs have 0.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Keep Mint Authority</p>
+          <mat-slide-toggle
+            [disabled]="isCreatingToken"
+            [(ngModel)]="keepMintAuthority"
+          ></mat-slide-toggle>
+          <p class="input-sub-title">In order to mint more tokens than the specified supply, later.</p>
+        </div>
+
+        <div class="input-wrapper">
+          <p class="input-title">Keep Freeze Authority</p>
+          <mat-slide-toggle
+            [disabled]="isCreatingToken"
+            [(ngModel)]="keepFreezeAuthority"
+          ></mat-slide-toggle>
+          <p class="input-sub-title">In order to freeze (prevent from using) token accounts.</p>
+        </div>
+
+        <div class="bottom-cta-container">
+          <button
+            class="button-primary"
+            [disabled]="isCreatingToken"
+            (click)="createToken()"
+          >
+            <span *ngIf="!isCreatingToken">Create token</span>
+            <mat-spinner
+              *ngIf="isCreatingToken"
+              [diameter]="20"
+            ></mat-spinner>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <input
+      #fileSelector
+      type="file"
+      accept="image/jpg,image/jpeg,image/png,image/gif"
+      class="fileInput"
+      (change)="onFileSelected($event)"
+    />
+  </body>
+</html>

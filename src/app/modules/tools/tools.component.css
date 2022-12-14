@@ -1,0 +1,95 @@
+.toolsBody {
+  background-color: #020a03;
+}
+
+.content-container {
+  width: min(1152px, 100%);
+}
+
+.page-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0px;
+  padding: 58px 24px;
+}
+
+.page-title {
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+  color: #f8f8f8;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+}
+
+.tool-options-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 0px;
+  padding: 24px;
+}
+
+.tool-option {
+  width: min(352px, 100%);
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 0px;
+  padding: 12px 36px;
+  background: #1a1b1e;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  transition: 0.5s all;
+  cursor: pointer;
+}
+
+.tool-option:hover,
+.tool-option:active {
+  background: #111112;
+  border: 1px solid #f8f8f8;
+}
+
+.tool-option-image {
+  width: 78px;
+  height: 78px;
+  border-radius: 10px;
+  object-fit: fill;
+  margin: 0px;
+  margin-bottom: 10px;
+  padding: 0px;
+}
+
+.tool-option-title {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+  color: #f8f8f8;
+  margin: 0px;
+  padding: 0px;
+}
+
+.tool-option-desc {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0px;
+  padding: 0px;
+}

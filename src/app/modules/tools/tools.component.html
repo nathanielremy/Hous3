@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <meta content="description" name="description" />
+    <meta name="google" content="notranslate" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon.ico" />
+    <link href="../../../favicon.ico" rel="icon" />
+
+    <title>Tool Suite</title>
+  </head>
+  <body class="toolsBody">
+    <app-header></app-header>
+    <div class="w-full flex flex-col items-center">
+      <div class="divider"></div>
+      <div class="content-container">
+        <div class="page-title-wrapper">
+          <h3 class="page-title">Tool Suite</h3>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="content-container">
+        <div class="tool-options-wrapper">
+          <div routerLink="/tools/create-token" class="tool-option">
+            <img
+              class="tool-option-image"
+              src="../../../assets/icons/generate-assets-icon.png"
+            />
+            <p class="tool-option-title">Create a token</p>
+            <p class="tool-option-desc">Create a unique token straight to your wallet</p>
+          </div>
+          <div
+            *ngFor="let item of [].constructor(3); let i = index"
+            class="tool-option"
+          >
+            <img
+              class="tool-option-image"
+              src="../../../assets/icons/generate-assets-icon.png"
+            />
+            <p class="tool-option-title">Generative art</p>
+            <p class="tool-option-desc">Generative art for Eth & Sol</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+.container {
+  width: 345px;
+  min-width: min(100%, 345px);
+  max-width: 345px;
+  height: auto;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  cursor: pointer;
+  padding: 15px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.message {
+  width: 300px;
+  flex-grow: 1;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  color: white;
+  text-align: left;
+  margin: 0 0 0 8px;
+  padding: 0;
+}
+
+.default-color {
+  color: white;
+}
+
+.default-border {
+  border-left: solid 4px white;
+}
+
+.info-color {
+  color: #00a7fb;
+}
+
+.info-border {
+  border-left: solid 4px #00a7fb;
+}
+
+.success-color {
+  color: #00c35d;
+}
+
+.success-border {
+  border-left: solid 4px #00c35d;
+}
+
+.warn-color {
+  color: #ffee1d;
+}
+
+.warn-border {
+  border-left: solid 4px #ffee1d;
+}
+
+.error-color {
+  color: #ff2834;
+}
+
+.error-border {
+  border-left: solid 4px #ff2834;
+}
