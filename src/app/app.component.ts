@@ -13,7 +13,7 @@ import { WalletService } from "./service/wallet.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'EraMeta';
+  title = 'Hous3';
   iconifyScriptElement: HTMLScriptElement;
 
   constructor(private walletService: WalletService) {
