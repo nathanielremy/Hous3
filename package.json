@@ -34,7 +34,6 @@
     "@solana/web3.js": "^1.63.1",
     "browserify-zlib": "^0.2.0",
     "bs58": "^5.0.0",
-    "canvas": "^2.9.1",
     "ng-recaptcha": "^9.0.0",
     "ngx-csv-parser": "^1.1.1",
     "ngx-image-cropper": "^6.2.2",
