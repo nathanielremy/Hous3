@@ -14,7 +14,7 @@
 
     <title>Tool Suite</title>
   </head>
-  <body class="toolsBody">
+  <body class="tools-body">
     <app-header></app-header>
     <div class="w-full flex flex-col items-center">
       <div class="divider"></div>
@@ -32,18 +32,55 @@
               src="../../../assets/icons/generate-assets-icon.png"
             />
             <p class="tool-option-title">Create a token</p>
-            <p class="tool-option-desc">Create a unique token straight to your wallet</p>
+            <p class="tool-option-desc">
+              Create a custom token straight to your wallet
+            </p>
           </div>
-          <div
-            *ngFor="let item of [].constructor(3); let i = index"
-            class="tool-option"
-          >
+          <div class="tool-option">
             <img
               class="tool-option-image"
-              src="../../../assets/icons/generate-assets-icon.png"
+              src="../../../assets/icons/rocket-icon.png"
             />
-            <p class="tool-option-title">Generative art</p>
-            <p class="tool-option-desc">Generative art for Eth & Sol</p>
+            <p class="tool-option-title">Create a candy machine</p>
+            <p class="tool-option-desc">
+              Launch a custom candy machine & start minting
+            </p>
+          </div>
+          <div class="tool-option">
+            <img
+              class="tool-option-image"
+              src="../../../assets/icons/storefront-icon.png"
+            />
+            <p class="tool-option-title">Minting storefront</p>
+            <p class="tool-option-desc">
+              Branded candy machine minting page for your NFT sale
+            </p>
+          </div>
+          <div class="tool-option">
+            <img
+              class="tool-option-image"
+              src="../../../assets/icons/bid-icon.png"
+            />
+            <p class="tool-option-title">Auction an NFT</p>
+            <p class="tool-option-desc">
+              Select an NFT from your wallet & a starting bid
+            </p>
+            <div class="coming-soon-tag">
+              <span class="white">Coming soon</span>
+            </div>
+          </div>
+          <div class="tool-option">
+            <img
+              class="tool-option-image"
+              src="../../../assets/icons/drag-and-drop-icon.png"
+            />
+            <p class="tool-option-title">Generate art</p>
+            <p class="tool-option-desc">
+              Production ready art + metadata for Sol & Eth
+            </p>
+            <div class="coming-soon-tag">
+              <span class="white">Coming soon</span>
+            </div>
           </div>
         </div>
       </div>
