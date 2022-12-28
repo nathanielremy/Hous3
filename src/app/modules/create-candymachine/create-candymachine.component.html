@@ -1,1 +1,39 @@
-<p>create-candymachine works!</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width,initial-scale=1" name="viewport"/>
+    <meta content="description" name="description"/>
+    <meta name="google" content="notranslate"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon.ico"/>
+    <link href="../../../favicon.ico" rel="icon"/>
+
+    <title>Create Candymachine</title>
+  </head>
+  <body class="create-candymachine-body">
+    <app-header></app-header>
+    <div class="w-full flex flex-col items-center">
+      <div class="divider"></div>
+      <div class="page-title-container">
+        <div class="content-container">
+          <div class="page-title-wrapper">
+            <h3 class="page-title">Create a Candy Machine</h3>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="content-container flex flex-row justify-center">
+        <button
+          class="button-primary"
+          (click)="createCandymachine()"
+        >
+          Create
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
