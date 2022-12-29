@@ -1,5 +1,6 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
-import { SnackService } from 'src/app/service/snack.service';
+import { StepperOrientation } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-create-candymachine',
@@ -8,11 +9,17 @@ import { SnackService } from 'src/app/service/snack.service';
 })
 export class CreateCandymachineComponent implements OnInit {
 
-  constructor(private snackService: SnackService) { }
+  stepperOrientation: StepperOrientation = "horizontal";
 
-  ngOnInit(): void { }
+  constructor(private breakPointObserver: BreakpointObserver) { }
 
-  createCandymachine() {
-    this.snackService.showWarning('Creating candymachine');
+  ngOnInit(): void {
+    this.breakPointObserver
+    .observe(['(max-width: 768px)'])
+    .subscribe((state) => {
+      this.stepperOrientation = state.matches
+        ? "vertical"
+        : "horizontal";
+    });
   }
 }

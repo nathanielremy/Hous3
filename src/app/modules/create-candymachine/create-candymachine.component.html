@@ -26,13 +26,38 @@
         </div>
       </div>
       <div class="divider"></div>
-      <div class="content-container flex flex-row justify-center">
-        <button
-          class="button-primary"
-          (click)="createCandymachine()"
-        >
-          Create
-        </button>
+      <div class="content-container flex justify-center">
+        <div class="stepper-wrapper">
+          <mat-stepper [orientation]="stepperOrientation">
+            <mat-step>
+              <ng-template matStepLabel aria-selected="true">
+                <div class="stepper-label-wrapper">
+                  <img class="stepper-label-img" src="../../../assets/icons/step-one-icon.png" alt="">
+                  <h3 class="stepper-label-title white">Configure contract</h3>
+                </div>
+              </ng-template>
+              <h3 class="white">Configure</h3>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel aria-selected="true">
+                <div class="stepper-label-wrapper">
+                  <img class="stepper-label-img" src="../../../assets/icons/step-two-icon.png" alt="">
+                  <h3 class="stepper-label-title white">Insert assets</h3>
+                </div>
+              </ng-template>
+              <h3 class="white">Insert</h3>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel aria-selected="true">
+                <div class="stepper-label-wrapper">
+                  <img class="stepper-label-img" src="../../../assets/icons/step-three-icon.png" alt="">
+                  <h3 class="stepper-label-title white">Finalise</h3>
+                </div>
+              </ng-template>
+              <h3 class="white">Finalise</h3>
+            </mat-step>
+          </mat-stepper>
+        </div>
       </div>
     </div>
   </body>
