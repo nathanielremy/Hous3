@@ -155,7 +155,7 @@ export class CreateTokenComponent implements OnInit {
       }
       catch (err) {
         this.snackService.showError(
-          `${(err instanceof MetaplexError) ? err.problem : err}`
+          `${(err instanceof MetaplexError) ? err.message : err}`
         );
         console.log(`err: ${err}`);
       }

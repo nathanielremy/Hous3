@@ -13,6 +13,7 @@ import {
   JsonMetadata,
   UploadMetadataOutput,
   CreateSftInput,
+  CreateCandyMachineInput
 } from '@metaplex-foundation/js';
 import { Connection, PublicKey, Signer } from '@solana/web3.js';
 import {
@@ -125,5 +126,18 @@ export class MetaplexService {
     };
 
     return this.metaplex.nfts().createSft(sftInput, options);
+  }
+
+  createCandyMachine(candyMachineSettings: CreateCandyMachineInput) {
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    const options: OperationOptions = {
+      payer: this.getIdentity(),
+      commitment: 'confirmed',
+      signal: abortController.signal
+    };
+
+    return this.metaplex.candyMachines().create(candyMachineSettings, options);
   }
 }
