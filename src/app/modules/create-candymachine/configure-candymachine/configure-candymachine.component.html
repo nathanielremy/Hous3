@@ -1,4 +1,109 @@
 <div class="component-container">
+  <div class="sections-container">
+    <!-- Candy machine settings -->
+    <div class="input-container">
+      <p class="main-input-title">Settings</p>
+      <div class="divider"></div>
+      <div class="input-wrapper">
+        <p class="input-title">Update Authority</p>
+        <input
+          class="default-input"
+          type="text"
+          [placeholder]="updateAuthorityPlaceholder"
+          [disabled]="true"
+        />
+        <p class="input-sub-title">The wallet responsible for editing & deleting the candy machine.</p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">Royalty %</p>
+        <input
+          class="default-input"
+          type="number"
+          max="10"
+          min="0"
+          placeholder="0"
+          [(ngModel)]="royalty"
+        />
+        <p class="input-sub-title">The share of secondary sales to be split amongst creators. Max 10%.</p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">Supply</p>
+        <input
+          class="default-input"
+          type="number"
+          max="10000"
+          min="0"
+          placeholder="1234"
+          [(ngModel)]="supply"
+        />
+        <p class="input-sub-title">The total amount of NFTs available to mint. Max 10k.</p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">Symbol</p>
+        <input
+          class="default-input"
+          type="text"
+          maxlength="10"
+          placeholder="BAYC"
+          [(ngModel)]="symbol"
+        />
+        <p class="input-sub-title">A symbol to easily identify your tokens.</p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">NFTs Mutable?</p>
+        <mat-slide-toggle
+          [(ngModel)]="isMutable"
+        ></mat-slide-toggle>
+        <p class="input-sub-title">Ability to update NFTs once minted. Recommended on.</p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">Creators</p>
+        <div
+          *ngFor="let creator of creators; let idx = index"
+          class="creator-input-wrapper"
+        >
+          <div class="input-wrapper">
+            <input
+              class="default-input"
+              type="text"
+              maxlength="58"
+              placeholder="Creator wallet address"
+              [(ngModel)]="creator.address"
+            />
+          </div>
+          <div class="flex flex-row justify-start items-center">
+            <input
+              class="default-input creator-share-input"
+              type="number"
+              max="10"
+              min="0"
+              placeholder="%"
+              [(ngModel)]="creator.share"
+            />
+            <div
+              class="delete-creator-wrapper"
+              (click)="deleteCreator(idx)"
+            >
+              <span class="iconify delete-creator-icon" data-icon="uil:trash-alt"></span>
+            </div>
+          </div>
+        </div>
+        <button
+          *ngIf="creators.length < 4"
+          class="button-secondary"
+          (click)="addCreator()"
+        >
+          Add creator
+        </button>
+        <p class="input-sub-title">Creator addresses and their respective share of royalties.</p>
+      </div>
+    </div>
+    <!-- Candy machine guards -->
+    <div class="input-container">
+      <p class="main-input-title">Guards</p>
+      <div class="divider"></div>
+    </div>
+  </div>
   <button
     class="button-primary"
     (click)="createCandyMachine()"
