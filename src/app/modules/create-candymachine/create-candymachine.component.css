@@ -18,9 +18,11 @@
 
 .page-title-wrapper {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   margin: 0px;
   padding: 58px 24px;
 }
@@ -28,12 +30,49 @@
 .page-title {
   font-weight: 600;
   font-size: 32px;
-  line-height: 44px;
+  line-height: 40px;
   letter-spacing: -0.02em;
   color: #f8f8f8;
   margin: 0px;
   padding: 0px;
   text-align: left;
+}
+
+.created-address-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 8px 12px;
+  background: #020a03;
+  border-radius: 7px;
+  border: 1px solid #303235;
+}
+
+.created-address {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.02em;
+  color: rgba(158, 158, 158, 1);
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+}
+
+.copy-address-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  color: #525355;
+  transition: 0.5s all;
+  cursor: pointer;
+}
+
+.copy-address-icon:hover,
+.copy-address-icon:active  {
+  color: #f8f8f8;
 }
 
 .stepper-wrapper {

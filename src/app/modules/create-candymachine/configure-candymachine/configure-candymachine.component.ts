@@ -1,5 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { CreateCandyMachineInput, MetaplexError, toBigNumber } from '@metaplex-foundation/js';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
+  CandyGuardsSettings,
+  CandyMachine,
+  CandyMachineConfigLineSettings,
+  CandyMachineHiddenSettings,
+  CreateCandyMachineInput,
+  MetaplexError,
+  sol,
+  toBigNumber
+} from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 import { Adapter } from '@solana/wallet-adapter-base';
 import { MetaplexService } from 'src/app/service/metaplex.service';
@@ -13,6 +28,9 @@ import { isValidSolanaAddress, truncateAddress } from 'src/app/common/utils/util
   styleUrls: ['./configure-candymachine.component.css']
 })
 export class ConfigureCandymachineComponent implements OnInit {
+  @Input() candyMachine: CandyMachine | null = null;
+  @Output() candyMachineEmitter = new EventEmitter<CandyMachine>();
+
   walletAdapter: Adapter | null = null;
   rpcEndpoint: string | null = null;
 
@@ -33,7 +51,7 @@ export class ConfigureCandymachineComponent implements OnInit {
   ) { }
 
   get updateAuthorityPlaceholder(): string {
-    return this.walletAdapter?.publicKey?.toString()
+    return this.walletAdapter?.publicKey
       ? truncateAddress(this.walletAdapter?.publicKey?.toString())
       : 'Connect wallet';
   }
@@ -75,7 +93,11 @@ export class ConfigureCandymachineComponent implements OnInit {
         const candyMachineSettings = this.constructCandyMachineSettings();
         if (candyMachineSettings) {
           const candyMachine = await this.mxService.createCandyMachine(candyMachineSettings);
-          console.log(`CANDYMACHINE: ${JSON.stringify(candyMachine.candyMachine)}`);
+          this.candyMachine = candyMachine.candyMachine;
+          this.candyMachineEmitter.emit(candyMachine.candyMachine);
+          console.log(`CANDYMACHINE: ${JSON.stringify(this.candyMachine)}`);
+        } else {
+          // Do nothing
         }
       }
       catch (err) {
@@ -131,13 +153,11 @@ export class ConfigureCandymachineComponent implements OnInit {
       return null;
     }
 
-    console.log(`Royalty: ${this.royalty}`)
-    console.log(`Supply: ${this.supply}`)
-    console.log(`Symbol: ${this.symbol}`)
-    console.log(`isMutable: ${this.isMutable}`)
-    for (let creator of this.creators) {
-      console.log(`Creator: ${truncateAddress(creator.address)} ${creator.share}`)
-    }
+    const itemSettings = this.constructCandyMachineItemSettings();
+    if (!itemSettings || itemSettings == null) return null;
+
+    const guards = this.constructCandyMachineGuards();
+    if (!guards || guards == null) return null;
 
     const candyMachineSettings = {
       authority: this.mxService.getIdentity(),
@@ -147,7 +167,7 @@ export class ConfigureCandymachineComponent implements OnInit {
       },
       sellerFeeBasisPoints: Math.trunc(this.royalty * 100),
       itemsAvailable: toBigNumber(this.supply),
-      itemSettings: undefined, // CandyMachineHiddenSettings | CandyMachineConfigLineSettings
+      itemSettings: itemSettings,
       symbol: this.symbol,
       maxEditionSupply: toBigNumber(0),
       isMutable: this.isMutable,
@@ -157,10 +177,31 @@ export class ConfigureCandymachineComponent implements OnInit {
           verified: creator.verified,
           share: creator.share
         }
-      })
+      }),
+      guards: guards
     };
 
     return candyMachineSettings;
+  }
+
+  constructCandyMachineItemSettings(
+  ): CandyMachineHiddenSettings | CandyMachineConfigLineSettings | null {
+    const isPreReveal = true;
+    if (isPreReveal) {
+      return {
+        type: "hidden",
+        name: "Hous3 #$ID+1$",
+        uri: "https://arweave.net/ijoavX6imWfU4UPh4C90NM3VgGy22KUwHNfTGL4iqRg",
+        hash: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      };
+    }
+    return null;
+  }
+
+  constructCandyMachineGuards(): CandyGuardsSettings | null {
+    return {
+      solPayment: { amount: sol(1.5), destination: this.mxService.getIdentity().publicKey }
+    };
   }
 
   validateUserConnection(): boolean {

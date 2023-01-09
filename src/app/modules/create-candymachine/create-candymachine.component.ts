@@ -1,6 +1,8 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { StepperOrientation } from '@angular/material/stepper';
+import { CandyMachine } from '@metaplex-foundation/js';
+import { truncateAddress } from 'src/app/common/utils/utils';
 
 @Component({
   selector: 'app-create-candymachine',
@@ -8,10 +10,15 @@ import { StepperOrientation } from '@angular/material/stepper';
   styleUrls: ['./create-candymachine.component.css']
 })
 export class CreateCandymachineComponent implements OnInit {
+  candyMachine: CandyMachine | null = null;
 
   stepperOrientation: StepperOrientation = "horizontal";
 
   constructor(private breakPointObserver: BreakpointObserver) { }
+
+  get truncatedCandyMachineAddress(): string {
+    return truncateAddress(this.candyMachine?.address?.toString());
+  }
 
   ngOnInit(): void {
     this.breakPointObserver
@@ -21,5 +28,9 @@ export class CreateCandymachineComponent implements OnInit {
         ? "vertical"
         : "horizontal";
     });
+  }
+
+  setCandyMachine(candyMachine: CandyMachine) {
+    this.candyMachine = candyMachine;
   }
 }
