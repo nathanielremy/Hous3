@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width,initial-scale=1" name="viewport"/>
+    <meta content="description" name="description"/>
+    <meta name="google" content="notranslate"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../favicon.ico"/>
+    <link href="../../../favicon.ico" rel="icon"/>
+
+    <title>Create Candymachine</title>
+  </head>
+  <body class="create-candymachine-body">
+    <app-header></app-header>
+    <div class="w-full flex flex-col items-center">
+      <div class="divider"></div>
+      <div class="page-title-container">
+        <div class="content-container">
+          <div class="page-title-wrapper">
+            <h3 class="page-title">Create a Candy Machine</h3>
+            <div class="created-address-wrapper">
+              <p class="created-address">
+                Your candy machine: {{ truncatedCandyMachineAddress }}
+              </p>
+              <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="content-container flex justify-center">
+        <div class="stepper-wrapper">
+          <mat-stepper [orientation]="stepperOrientation">
+            <mat-step>
+              <ng-template matStepLabel aria-selected="true">
+                <div class="stepper-label-wrapper">
+                  <img class="stepper-label-img" src="../../../assets/icons/step-one-icon.png" alt="">
+                  <h3 class="stepper-label-title white">Configure contract</h3>
+                </div>
+              </ng-template>
+              <app-configure-candymachine
+                [candyMachine]="candyMachine"
+                (candyMachineEmitter)="setCandyMachine($event)"
+              ></app-configure-candymachine>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel aria-selected="true">
+                <div class="stepper-label-wrapper">
+                  <img class="stepper-label-img" src="../../../assets/icons/step-two-icon.png" alt="">
+                  <h3 class="stepper-label-title white">Insert assets</h3>
+                </div>
+              </ng-template>
+              <h3 class="white">Insert</h3>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel aria-selected="true">
+                <div class="stepper-label-wrapper">
+                  <img class="stepper-label-img" src="../../../assets/icons/step-three-icon.png" alt="">
+                  <h3 class="stepper-label-title white">Finalise</h3>
+                </div>
+              </ng-template>
+              <h3 class="white">Finalise</h3>
+            </mat-step>
+          </mat-stepper>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
