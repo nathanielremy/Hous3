@@ -98,10 +98,62 @@
         <p class="input-sub-title">Creator addresses and their respective share of royalties.</p>
       </div>
     </div>
-    <!-- Candy machine guards -->
+    <!-- Candy machine item settings -->
     <div class="input-container">
-      <p class="main-input-title">Guards</p>
+      <p class="main-input-title">Mint Type</p>
       <div class="divider"></div>
+      <div class="item-settings-toggle-wrapper">
+        <div
+          class="item-settings-toggle-item"
+          [ngClass]="{ 'active-item-settings-toggle-item': !isItemSettingsHidden }"
+          (click)="setItemSettingsHidden(false)"
+        >
+          <span>Default</span>
+        </div>
+        <div
+          class="item-settings-toggle-item"
+          [ngClass]="{ 'active-item-settings-toggle-item': isItemSettingsHidden }"
+          (click)="setItemSettingsHidden(true)"
+        >
+          <span>Pre-reveal</span>
+        </div>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">NFT Name</p>
+        <input
+          class="default-input"
+          type="text"
+          maxlength="29"
+          placeholder="{{ isItemSettingsHidden ? 'Pre-reveal ' : '' }}Nft name"
+          [(ngModel)]="nftName"
+        />
+        <p class="input-sub-title">
+          The base name that will be displayed for each
+          {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
+          Nft.
+        </p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">NFTs Indexed?</p>
+        <mat-slide-toggle
+          [(ngModel)]="isNftNameIndexed"
+        ></mat-slide-toggle>
+        <p class="input-sub-title">
+          Whether or not each
+          {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
+          Nft name will be numbered.
+        </p>
+      </div>
+      <div
+        *ngIf="!isItemSettingsHidden"
+        class="input-wrapper"
+      >
+        <p class="input-title">Mint NFTs in order?</p>
+        <mat-slide-toggle
+          [(ngModel)]="isMintSequential"
+        ></mat-slide-toggle>
+        <p class="input-sub-title">Whether to mint Nfts in order or at random.</p>
+      </div>
     </div>
   </div>
   <button

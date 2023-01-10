@@ -34,6 +34,7 @@ export class ConfigureCandymachineComponent implements OnInit {
   walletAdapter: Adapter | null = null;
   rpcEndpoint: string | null = null;
 
+  // candyMachineSettings inputs
   royalty: number;
   supply: number;
   symbol: string = '';
@@ -43,6 +44,13 @@ export class ConfigureCandymachineComponent implements OnInit {
     verified: boolean,
     share: number
   }[] = [];
+
+  isItemSettingsHidden: boolean = false;
+
+  // itemSettings inputs
+  nftName: string = '';
+  isNftNameIndexed: boolean = false;
+  isMintSequential: boolean = false;
 
   constructor(
     private walletService: WalletService,
@@ -85,6 +93,10 @@ export class ConfigureCandymachineComponent implements OnInit {
 
   deleteCreator(idx: number) {
     this.creators.splice(idx, 1);
+  }
+
+  setItemSettingsHidden(hidden: boolean) {
+    this.isItemSettingsHidden = hidden;
   }
 
   async createCandyMachine() {
@@ -186,16 +198,28 @@ export class ConfigureCandymachineComponent implements OnInit {
 
   constructCandyMachineItemSettings(
   ): CandyMachineHiddenSettings | CandyMachineConfigLineSettings | null {
-    const isPreReveal = true;
-    if (isPreReveal) {
-      return {
-        type: "hidden",
-        name: "Hous3 #$ID+1$",
-        uri: "https://arweave.net/ijoavX6imWfU4UPh4C90NM3VgGy22KUwHNfTGL4iqRg",
-        hash: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-      };
+    if (!this.nftName.trim() || this.nftName.length > 29) {
+      this.snackService.showWarning('Please enter a valid Nft name. Max 29 characters');
+      return null;
     }
-    return null;
+
+    if (this.isItemSettingsHidden) {
+      return {
+        type: 'hidden',
+        name: this.nftName + (this.isNftNameIndexed ? ' #$ID+1$' : ''),
+        uri: 'https://arweave.net/placeholder',
+        hash: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      } as CandyMachineHiddenSettings;
+    } else {
+      return {
+        type: 'configLines',
+        prefixName: this.nftName + (this.isNftNameIndexed ? ' #$ID+1$' : ''),
+        nameLength: 0,
+        prefixUri: 'https://arweave.net/',
+        uriLength: 43,
+        isSequential: this.isMintSequential
+      } as CandyMachineConfigLineSettings;
+    }
   }
 
   constructCandyMachineGuards(): CandyGuardsSettings | null {
