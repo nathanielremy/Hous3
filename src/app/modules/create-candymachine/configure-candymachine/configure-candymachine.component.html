@@ -118,41 +118,43 @@
           <span>Pre-reveal</span>
         </div>
       </div>
-      <div class="input-wrapper">
-        <p class="input-title">NFT Name</p>
-        <input
-          class="default-input"
-          type="text"
-          maxlength="29"
-          placeholder="{{ isItemSettingsHidden ? 'Pre-reveal ' : '' }}Nft name"
-          [(ngModel)]="nftName"
-        />
-        <p class="input-sub-title">
-          The base name that will be displayed for each
-          {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
-          Nft.
-        </p>
-      </div>
-      <div class="input-wrapper">
-        <p class="input-title">NFTs Indexed?</p>
-        <mat-slide-toggle
-          [(ngModel)]="isNftNameIndexed"
-        ></mat-slide-toggle>
-        <p class="input-sub-title">
-          Whether or not each
-          {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
-          Nft name will be numbered.
-        </p>
-      </div>
-      <div
-        *ngIf="!isItemSettingsHidden"
-        class="input-wrapper"
-      >
-        <p class="input-title">Mint NFTs in order?</p>
-        <mat-slide-toggle
-          [(ngModel)]="isMintSequential"
-        ></mat-slide-toggle>
-        <p class="input-sub-title">Whether to mint Nfts in order or at random.</p>
+      <div class="item-settings-container">
+        <div class="input-wrapper">
+          <p class="input-title">NFT Name</p>
+          <input
+            class="default-input"
+            type="text"
+            maxlength="29"
+            placeholder="{{ isItemSettingsHidden ? 'Pre-reveal ' : '' }}Nft name"
+            [(ngModel)]="nftName"
+          />
+          <p class="input-sub-title">
+            The base name that will be displayed for each
+            {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
+            Nft.
+          </p>
+        </div>
+        <div class="input-wrapper">
+          <p class="input-title">NFTs Indexed?</p>
+          <mat-slide-toggle
+            [(ngModel)]="isNftNameIndexed"
+          ></mat-slide-toggle>
+          <p class="input-sub-title">
+            Whether or not each
+            {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
+            Nft name will be numbered.
+          </p>
+        </div>
+        <div
+          *ngIf="!isItemSettingsHidden"
+          class="input-wrapper"
+        >
+          <p class="input-title">Mint NFTs in order?</p>
+          <mat-slide-toggle
+            [(ngModel)]="isMintSequential"
+          ></mat-slide-toggle>
+          <p class="input-sub-title">Whether to mint Nfts in order or at random.</p>
+        </div>
       </div>
     </div>
   </div>

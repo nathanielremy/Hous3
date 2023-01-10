@@ -153,6 +153,18 @@
   border-bottom: 1px solid #f8f8f8;
 }
 
+.item-settings-container {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 320px;
+  max-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+}
+
 @media (max-width: 500px) {
   .creator-input-wrapper {
     flex-wrap: wrap;
