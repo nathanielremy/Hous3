@@ -98,6 +98,54 @@
         <p class="input-sub-title">Creator addresses and their respective share of royalties.</p>
       </div>
     </div>
+    <!-- Collection Nft settings -->
+    <div class="input-container">
+      <div class="main-input-title-wrapper">
+        <p class="main-input-title">Collection NFT</p>
+        <div class="learn-create-wrapper">
+          <a
+            href="https://docs.metaplex.com/programs/token-metadata/certified-collections"
+            target="_blank"
+          >
+            <p class="input-sub-title text-clickable">Learn more</p>
+          </a>
+          <p class="input-sub-title">/</p>
+          <a
+            href="https://hous3.io/tools/create-token"
+            target="_blank"
+          >
+            <p class="input-sub-title text-clickable">Create Nft</p>
+          </a>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="collection-nft-container">
+        <div class="validate-collection-nft-wrapper">
+          <div class="warning-label">
+            <span class="iconify warning-label-icon" data-icon="icon-park-outline:attention"></span>
+            <span>Candy machine and collection Nft update authority must match</span>
+          </div>
+          <div class="input-wrapper">
+            <input
+              class="default-input"
+              type="text"
+              maxlength="58"
+              placeholder="Collection Nft address"
+              [(ngModel)]="collectionNftAddress"
+            />
+            <p class="input-sub-title">
+              Minted Nfts will be grouped to this Nft to form an easily verifiable collection.
+            </p>
+          </div>
+          <button
+            class="button-primary"
+            (click)="validateCollectionNft()"
+          >
+            Validate
+          </button>
+        </div>
+      </div>
+    </div>
     <!-- Candy machine item settings -->
     <div class="input-container">
       <p class="main-input-title">Mint Type</p>

@@ -11,7 +11,11 @@ import {
   CandyMachineConfigLineSettings,
   CandyMachineHiddenSettings,
   CreateCandyMachineInput,
+  isNft,
+  isNftWithToken,
   MetaplexError,
+  Nft,
+  NftWithToken,
   sol,
   toBigNumber
 } from '@metaplex-foundation/js';
@@ -58,6 +62,10 @@ export class ConfigureCandymachineComponent implements OnInit {
     private snackService: SnackService
   ) { }
 
+  // Collection Nft inputs
+  collectionNftAddress: string = '';
+  collectionNft: Nft | NftWithToken | null = null;
+
   get updateAuthorityPlaceholder(): string {
     return this.walletAdapter?.publicKey
       ? truncateAddress(this.walletAdapter?.publicKey?.toString())
@@ -97,6 +105,34 @@ export class ConfigureCandymachineComponent implements OnInit {
 
   setItemSettingsHidden(hidden: boolean) {
     this.isItemSettingsHidden = hidden;
+  }
+
+  async validateCollectionNft() {
+    if (this.validateUserConnection()) {
+      if (
+        !this.collectionNftAddress.trim() ||
+        !isValidSolanaAddress(this.collectionNftAddress)
+      ) {
+        this.snackService.showWarning('Please enter a valid Solana Nft address');
+        return;
+      }
+
+      try {
+        const nft = await this.mxService.getNft(new PublicKey(this.collectionNftAddress), true);
+        if (isNft(nft) || isNftWithToken(nft)) {
+          this.collectionNft = nft;
+        } else {
+          this.collectionNft = null;
+          this.snackService.showError('Token does not follow the Nft standard');
+        }
+      }
+      catch (err) {
+        this.snackService.showError(
+          `${(err instanceof MetaplexError) ? (err.cause ?? 'Account not found') : err}`
+        );
+        console.log(`err: ${err}`);
+      }
+    }
   }
 
   async createCandyMachine() {
@@ -165,6 +201,14 @@ export class ConfigureCandymachineComponent implements OnInit {
       return null;
     }
 
+    if (
+      !this.collectionNft ||
+      !this.mxService.compareIdentity(this.collectionNft.updateAuthorityAddress)
+    ) {
+      this.snackService.showWarning('Collection Nft has not been validated');
+      return null;
+    }
+
     const itemSettings = this.constructCandyMachineItemSettings();
     if (!itemSettings || itemSettings == null) return null;
 
@@ -174,7 +218,7 @@ export class ConfigureCandymachineComponent implements OnInit {
     const candyMachineSettings = {
       authority: this.mxService.getIdentity(),
       collection: {
-        address: new PublicKey('7ymeaNmfLZ6SCyVRvupL9tpZaLa5fMJpwHTNYhjob4uQ'),
+        address: this.collectionNft.address,
         updateAuthority: this.mxService.getIdentity()
       },
       sellerFeeBasisPoints: Math.trunc(this.royalty * 100),

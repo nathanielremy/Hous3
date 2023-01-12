@@ -140,4 +140,19 @@ export class MetaplexService {
 
     return this.metaplex.candyMachines().create(candyMachineSettings, options);
   }
+
+  getNft(address: PublicKey, fullyLoaded: boolean) {
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    return this.metaplex.nfts().findByMint(
+      {
+        mintAddress: address,
+        loadJsonMetadata: fullyLoaded
+      },
+      {
+        signal: abortController.signal
+      }
+    );
+  }
 }
