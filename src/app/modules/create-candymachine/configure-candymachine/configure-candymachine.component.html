@@ -1,7 +1,7 @@
 <div class="component-container">
   <div class="section-container">
     <!-- Candy machine settings -->
-    <div class="input-container">
+    <div class="section-wrapper">
       <p class="main-input-title">Settings</p>
       <div class="divider"></div>
       <div class="input-wrapper">
@@ -99,7 +99,7 @@
       </div>
     </div>
     <!-- Collection Nft settings -->
-    <div class="input-container">
+    <div class="section-wrapper">
       <div class="main-input-title-wrapper">
         <p class="main-input-title">Collection NFT</p>
         <div class="learn-create-wrapper">
@@ -107,47 +107,84 @@
             href="https://docs.metaplex.com/programs/token-metadata/certified-collections"
             target="_blank"
           >
-            <p class="input-sub-title text-clickable">Learn more</p>
+            <p class="input-sub-title text-clickable text-center">Learn more</p>
           </a>
           <p class="input-sub-title">/</p>
           <a
             href="https://hous3.io/tools/create-token"
             target="_blank"
           >
-            <p class="input-sub-title text-clickable">Create Nft</p>
+            <p class="input-sub-title text-clickable text-center">Create Nft</p>
           </a>
         </div>
       </div>
       <div class="divider"></div>
-      <div class="collection-nft-container">
-        <div class="validate-collection-nft-wrapper">
-          <div class="warning-label">
-            <span class="iconify warning-label-icon" data-icon="icon-park-outline:attention"></span>
-            <span>Candy machine and collection Nft update authority must match</span>
-          </div>
-          <div class="input-wrapper">
-            <input
-              class="default-input"
-              type="text"
-              maxlength="58"
-              placeholder="Collection Nft address"
-              [(ngModel)]="collectionNftAddress"
-            />
-            <p class="input-sub-title">
-              Minted Nfts will be grouped to this Nft to form an easily verifiable collection.
-            </p>
-          </div>
-          <button
-            class="button-primary"
-            (click)="validateCollectionNft()"
-          >
+      <div
+        *ngIf="!collectionNft"
+        class="collection-nft-container"
+      >
+        <div class="indicator-label yellow">
+          <span class="iconify indicator-label-icon" data-icon="material-symbols:error-outline-rounded"></span>
+          <span>Candy machine and collection Nft update authority must match</span>
+        </div>
+        <div class="input-wrapper">
+          <input
+            class="default-input"
+            type="text"
+            maxlength="58"
+            placeholder="Collection Nft address"
+            [(ngModel)]="collectionNftAddress"
+            [disabled]="!canValidateCollectionNft"
+          />
+          <p class="input-sub-title">
+            Minted Nfts will be grouped to this Nft to form an easily verifiable collection.
+          </p>
+        </div>
+        <button
+          class="button-primary validate-nft-button"
+          (click)="validateCollectionNft()"
+          [disabled]="!canValidateCollectionNft"
+        >
+          <span *ngIf="!isValidatingCollectionNft">
             Validate
-          </button>
+          </span>
+          <mat-spinner
+            *ngIf="isValidatingCollectionNft"
+            [diameter]="20"
+          ></mat-spinner>
+        </button>
+      </div>
+      <div
+        *ngIf="collectionNft"
+        class="collection-nft-container"
+      >
+        <div class="collection-nft-display-container">
+          <div class="collection-nft-image-wrapper">
+            <img class="collection-nft-image" [src]=collectionNft.json?.image>
+          </div>
+          <div class="collection-nft-status-wrapper">
+            <p class="input-title">{{ collectionNft.name }}</p>
+            <div *ngIf="compareCollectionNftUpdateAuthority" class="indicator-label green">
+              <span class="iconify indicator-label-icon" data-icon="material-symbols:check-circle-outline-rounded"></span>
+              <span>Valid collection Nft</span>
+            </div>
+            <div *ngIf="!compareCollectionNftUpdateAuthority" class="indicator-label red">
+              <span class="iconify indicator-label-icon" data-icon="material-symbols:error-outline-rounded"></span>
+              <span>Update authorities do not match</span>
+            </div>
+            <button
+              class="button-secondary"
+              (click)="replaceCollectionNft()"
+              [disabled]="!canValidateCollectionNft"
+            >
+              Replace
+            </button>
+          </div>
         </div>
       </div>
     </div>
     <!-- Candy machine item settings -->
-    <div class="input-container">
+    <div class="section-wrapper">
       <p class="main-input-title">Mint Type</p>
       <div class="divider"></div>
       <div class="item-settings-toggle-wrapper">

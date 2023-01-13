@@ -38,6 +38,9 @@ export class ConfigureCandymachineComponent implements OnInit {
   walletAdapter: Adapter | null = null;
   rpcEndpoint: string | null = null;
 
+  isCreatingCandyMachine: boolean = false;
+  isValidatingCollectionNft: boolean = false;
+
   // candyMachineSettings inputs
   royalty: number;
   supply: number;
@@ -49,12 +52,15 @@ export class ConfigureCandymachineComponent implements OnInit {
     share: number
   }[] = [];
 
-  isItemSettingsHidden: boolean = false;
-
   // itemSettings inputs
+  isItemSettingsHidden: boolean = false;
   nftName: string = '';
   isNftNameIndexed: boolean = false;
   isMintSequential: boolean = false;
+
+  // Collection Nft inputs
+  collectionNftAddress: string = '';
+  collectionNft: Nft | NftWithToken | null = null;
 
   constructor(
     private walletService: WalletService,
@@ -62,14 +68,20 @@ export class ConfigureCandymachineComponent implements OnInit {
     private snackService: SnackService
   ) { }
 
-  // Collection Nft inputs
-  collectionNftAddress: string = '';
-  collectionNft: Nft | NftWithToken | null = null;
-
   get updateAuthorityPlaceholder(): string {
     return this.walletAdapter?.publicKey
       ? truncateAddress(this.walletAdapter?.publicKey?.toString())
       : 'Connect wallet';
+  }
+
+  get canValidateCollectionNft(): boolean {
+    return !this.isValidatingCollectionNft && !this.isCreatingCandyMachine;
+  }
+
+  get compareCollectionNftUpdateAuthority(): boolean {
+    return this.collectionNft
+      ? this.mxService.compareIdentity(this.collectionNft.updateAuthorityAddress)
+      : false;
   }
 
   ngOnInit(): void {
@@ -108,6 +120,8 @@ export class ConfigureCandymachineComponent implements OnInit {
   }
 
   async validateCollectionNft() {
+    if (!this.canValidateCollectionNft) return;
+
     if (this.validateUserConnection()) {
       if (
         !this.collectionNftAddress.trim() ||
@@ -116,6 +130,8 @@ export class ConfigureCandymachineComponent implements OnInit {
         this.snackService.showWarning('Please enter a valid Solana Nft address');
         return;
       }
+
+      this.isValidatingCollectionNft = true;
 
       try {
         const nft = await this.mxService.getNft(new PublicKey(this.collectionNftAddress), true);
@@ -132,7 +148,14 @@ export class ConfigureCandymachineComponent implements OnInit {
         );
         console.log(`err: ${err}`);
       }
+
+      this.isValidatingCollectionNft = false;
     }
+  }
+
+  replaceCollectionNft() {
+    this.collectionNftAddress = '';
+    this.collectionNft = null;
   }
 
   async createCandyMachine() {
@@ -203,7 +226,7 @@ export class ConfigureCandymachineComponent implements OnInit {
 
     if (
       !this.collectionNft ||
-      !this.mxService.compareIdentity(this.collectionNft.updateAuthorityAddress)
+      !this.compareCollectionNftUpdateAuthority
     ) {
       this.snackService.showWarning('Collection Nft has not been validated');
       return null;

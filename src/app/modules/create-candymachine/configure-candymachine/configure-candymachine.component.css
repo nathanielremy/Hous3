@@ -17,7 +17,7 @@
   padding: 24px 0px;
 }
 
-.input-container {
+.section-wrapper {
   min-width: 100%;
   max-width: 100%;
   display: flex;
@@ -126,6 +126,104 @@
   color: #ea5b52;
 }
 
+.indicator-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 12px 18px;
+  background: #1a1b1e;
+  border-radius: 40px;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+}
+
+.indicator-label-icon {
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
+}
+
+.learn-create-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.collection-nft-container {
+  width: min(500px, 100%);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.validate-nft-button {
+  min-width: 92px;
+  max-width: 92px;
+}
+
+.collection-nft-display-container {
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.collection-nft-image-wrapper {
+  min-height: 140px;
+  max-height: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  border-radius: 12px;
+  border: 1px solid #303235;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collection-nft-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.collection-nft-status-wrapper {
+  /* Parent container width - image - gap */
+  width: min(calc(500px - 140px - 24px), 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.collection-nft-status-wrapper .input-title {
+  min-width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .item-settings-toggle-wrapper {
   min-width: 100%;
   max-width: 100%;
@@ -173,62 +271,6 @@
   margin: 0px;
   margin-top: -18px;
   padding: 0px;
-}
-
-.learn-create-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin: 0px;
-  padding: 0px;
-}
-
-.collection-nft-container {
-  min-width: 100%;
-  max-width: 100%;
-  min-height: 250px;
-  max-height: 250px;
-  display: flex;
-  justify-content: center;
-}
-
-.validate-collection-nft-wrapper {
-  width: min(500px, 100%);
-  min-height: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-}
-
-.warning-label {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-  margin: 0px;
-  padding: 12px 18px;
-  background: #1a1b1e;
-  border-radius: 40px;
-  color: #f2bd00;
-  font-family: sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 18px;
-  text-align: left;
-}
-
-.warning-label-icon {
-  min-width: 14px;
-  max-width: 14px;
-  min-height: 14px;
-  max-height: 14px;
 }
 
 @media (max-width: 500px) {
