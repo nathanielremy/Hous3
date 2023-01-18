@@ -207,8 +207,8 @@
 }
 
 .collection-nft-status-wrapper {
-  /* Parent container width - image - gap */
-  width: min(calc(500px - 140px - 24px), 100%);
+  /* .collection-nft-container width - image width - gap */
+  max-width: min(calc(500px - 140px - 24px), 100%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;

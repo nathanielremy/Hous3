@@ -115,10 +115,6 @@ export class ConfigureCandymachineComponent implements OnInit {
     this.creators.splice(idx, 1);
   }
 
-  setItemSettingsHidden(hidden: boolean) {
-    this.isItemSettingsHidden = hidden;
-  }
-
   async validateCollectionNft() {
     if (!this.canValidateCollectionNft) return;
 
@@ -156,6 +152,10 @@ export class ConfigureCandymachineComponent implements OnInit {
   replaceCollectionNft() {
     this.collectionNftAddress = '';
     this.collectionNft = null;
+  }
+
+  setItemSettingsHidden(hidden: boolean) {
+    this.isItemSettingsHidden = hidden;
   }
 
   async createCandyMachine() {
@@ -224,10 +224,7 @@ export class ConfigureCandymachineComponent implements OnInit {
       return null;
     }
 
-    if (
-      !this.collectionNft ||
-      !this.compareCollectionNftUpdateAuthority
-    ) {
+    if (!this.collectionNft || !this.compareCollectionNftUpdateAuthority) {
       this.snackService.showWarning('Collection Nft has not been validated');
       return null;
     }

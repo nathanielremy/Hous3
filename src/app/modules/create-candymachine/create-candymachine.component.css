@@ -96,8 +96,10 @@ mat-stepper {
 }
 
 ::ng-deep .mat-step-header {
-  border-radius: 10px;
+  border-radius: 7px;
   background: rgba(0, 0, 0, 0);
+  height: 42px !important;
+  padding: 12px !important;
   transition: 0.5s all;
 }
 
