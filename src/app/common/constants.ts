@@ -1,7 +1,7 @@
 export const RPC_URL_MAINNET =
-  'https://fragrant-twilight-morning.solana-mainnet.quiknode.pro/45ce0532a6a5011db8b8f97d87b380050cc37a5f/';
+  'https://hidden-spring-patina.solana-mainnet.quiknode.pro/df38f814f2059e95eb4d8e00fdbcb1f22a4d896e/';
 export const RPC_URL_DEVNET =
-  'https://burned-omniscient-isle.solana-devnet.quiknode.pro/d3c9c4d1afe726d96aa034f6249ed7b50ca8cea3/';
+  'https://white-methodical-panorama.solana-devnet.quiknode.pro/1364f7de58b5bde7cfa1f93f5d98b98446dacf23/';
 
 export const METAPLEX_ABORT_TIMEOUT: number = 60 * 1000;
 

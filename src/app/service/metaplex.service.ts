@@ -155,4 +155,20 @@ export class MetaplexService {
       }
     );
   }
+
+  // MARK: For building only. Remove later
+  getCandyMachine(address: PublicKey) {
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    // MARK: Here only for testing
+    this.metaplex = Metaplex
+      .make(new Connection(RPC_URL_DEVNET))
+      .use(bundlrStorage(BUNDLR_CONFIG_DEVNET));
+
+    return this.metaplex.candyMachines().findByAddress(
+      { address: address },
+      { signal: abortController.signal }
+    );
+  }
 }

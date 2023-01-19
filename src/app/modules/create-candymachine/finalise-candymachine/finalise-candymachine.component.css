@@ -1,0 +1,39 @@
+.component-container {
+  min-width: 100%;
+  max-width: 100%;
+  padding: 24px 0px 0px 0px;
+}
+
+.content-container {
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #020a03;
+  border-radius: 12px;
+  border: 1px solid #303235;
+}
+
+.main-input-title {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+  color: #f8f8f8;
+  margin: 0px;
+  padding: 0px;
+}
+
+.not-found-wrapper {
+  height: 488px;
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0px;
+  padding: 0px 24px;
+}

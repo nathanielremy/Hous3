@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { CandyMachine } from '@metaplex-foundation/js';
 
 @Component({
   selector: 'app-finalise-candymachine',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./finalise-candymachine.component.css']
 })
 export class FinaliseCandymachineComponent implements OnInit {
+  @Input() candyMachine: CandyMachine | null = null;
 
   constructor() { }
 
