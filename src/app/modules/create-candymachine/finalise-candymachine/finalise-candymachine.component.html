@@ -5,13 +5,53 @@
       *ngIf="!candyMachine"
       class="not-found-wrapper"
     >
-      <p class="main-input-title">SHUT DOWN<br>Candy machine account not found</p>
+      <p class="section-title">Candy machine not found</p>
     </div>
-    <div
-      *ngIf="candyMachine"
-      class="not-found-wrapper"
-    >
-      <p class="main-input-title">{{ candyMachine.address }}</p>
-    </div>
+    <!-- Candy machine has been created -->
+    <ng-container *ngIf="candyMachine">
+      <div class="cm-content-container">
+        <div class="image-wrapper">
+          <img [src]="imageUrl" alt="">
+        </div>
+        <div class="details-container">
+          <div class="cm-address-wrapper">
+            <p class="section-title">{{ truncatedCandyMachineAddress }}</p>
+            <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+          </div>
+          <div class="details-wrapper">
+            <div class="details-item">
+              <p class="detail-item-title white">Supply</p>
+              <p class="detail-item-value grey">{{ candyMachineSupply }}</p>
+            </div>
+            <div class="details-item">
+              <p class="detail-item-title white">Price</p>
+              <p class="detail-item-value grey">
+                {{ candyMachinePrice }}
+                <span class="cyan">SOL</span>
+              </p>
+            </div>
+            <div class="details-item">
+              <p class="detail-item-title white">Royalty</p>
+              <p class="detail-item-value grey">{{ candyMachineRoyalty }}%</p>
+            </div>
+            <div class="details-item">
+              <p class="detail-item-title white">Symbol</p>
+              <p class="detail-item-value grey">{{ candyMachineSymbol }}</p>
+            </div>
+          </div>
+          <div class="details-wrapper">
+            <div class="date-item">
+              <p class="detail-item-title white">Mint start date</p>
+              <p class="detail-item-value grey">{{ candyMachineStartDate }}</p>
+            </div>
+            <div class="date-item">
+              <p class="detail-item-title white">Mint end date</p>
+              <p class="detail-item-value grey">{{ candyMachineEndDate }}</p>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>

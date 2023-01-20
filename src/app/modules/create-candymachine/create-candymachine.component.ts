@@ -41,8 +41,9 @@ export class CreateCandymachineComponent implements OnInit {
   async getCandyMachine() {
     try {
       this.candyMachine = await this.mxService.getCandyMachine(
-        new PublicKey('6X1s718vaXmxczecX4m5ter49ZwTm4TiFNv2D9u82Ach')
+        new PublicKey('GyDxvyhudzXkvtaHrrUEdVzYyjFLxRetMgXHp8rRT1ed')
       );
+      console.log(this.candyMachine);
     }
     catch (err) {
       console.log(`Error fetching cm ${err}`);
