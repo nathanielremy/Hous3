@@ -1,10 +1,14 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
-import { StepperOrientation } from '@angular/material/stepper';
 import { CandyMachine } from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 import { truncateAddress } from 'src/app/common/utils/utils';
 import { MetaplexService } from 'src/app/service/metaplex.service';
+
+enum CREATION_STAGE {
+  SETTINGS,
+  ASSETS,
+  FINALISE
+}
 
 @Component({
   selector: 'app-create-candymachine',
@@ -14,26 +18,19 @@ import { MetaplexService } from 'src/app/service/metaplex.service';
 export class CreateCandymachineComponent implements OnInit {
   candyMachine: CandyMachine | null = null;
 
-  stepperOrientation: StepperOrientation = "horizontal";
+  selectedCreationStage: CREATION_STAGE = CREATION_STAGE.SETTINGS;
 
-  constructor(
-    private breakPointObserver: BreakpointObserver,
-    private mxService: MetaplexService
-  ) { }
+  SETTINGS_STAGE: CREATION_STAGE = CREATION_STAGE.SETTINGS;
+  ASSETS_STAGE: CREATION_STAGE = CREATION_STAGE.ASSETS;
+  FINALISE_STAGE: CREATION_STAGE = CREATION_STAGE.FINALISE;
+
+  constructor(private mxService: MetaplexService) { }
 
   get truncatedCandyMachineAddress(): string {
     return truncateAddress(this.candyMachine?.address?.toString());
   }
 
   ngOnInit(): void {
-    this.breakPointObserver
-    .observe(['(max-width: 768px)'])
-    .subscribe((state) => {
-      this.stepperOrientation = state.matches
-        ? "vertical"
-        : "horizontal";
-    });
-
     this.getCandyMachine();
   }
 
@@ -48,6 +45,10 @@ export class CreateCandymachineComponent implements OnInit {
     catch (err) {
       console.log(`Error fetching cm ${err}`);
     }
+  }
+
+  setCreationStage(stage: CREATION_STAGE) {
+    this.selectedCreationStage = stage;
   }
 
   setCandyMachine(candyMachine: CandyMachine) {

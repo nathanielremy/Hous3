@@ -4,14 +4,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.section-container {
-  min-width: 100%;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 24px;
   margin: 0px;
   padding: 24px 0px;
@@ -26,7 +18,6 @@
   gap: 24px;
   margin: 0px;
   padding: 24px;
-  background: #020a03;
   border-radius: 12px;
   border: 1px solid #303235;
 }

@@ -2,18 +2,9 @@
   background-color: #020a03;
 }
 
-.page-title-container {
-  min-width: 100%;
-  max-width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background: #111112;
-}
-
 .content-container {
   width: min(1152px, 100%);
+  padding: 0px 24px;
 }
 
 .page-title-wrapper {
@@ -24,7 +15,7 @@
   flex-wrap: wrap;
   gap: 12px;
   margin: 0px;
-  padding: 58px 24px;
+  padding: 58px 0px;
 }
 
 .page-title {
@@ -45,7 +36,6 @@
   gap: 8px;
   margin: 0px;
   padding: 8px 12px;
-  background: #020a03;
   border-radius: 7px;
   border: 1px solid #303235;
 }
@@ -75,70 +65,35 @@
   color: #f8f8f8;
 }
 
-.stepper-wrapper {
-  min-width: 100%;
-  max-width: 100%;
-  padding: 24px;
-}
-
-mat-stepper {
-  min-width: 100%;
-  max-width: 100%;
-  background: #111112;
-  border-radius: 12px;
-  border: 1px solid #303235;
-  overflow: hidden;
-}
-
-::ng-deep .mat-step-header .mat-step-icon {
-  opacity: 0;
-  display: none;
-}
-
-::ng-deep .mat-step-header {
-  border-radius: 7px;
-  background: rgba(0, 0, 0, 0);
-  height: 42px !important;
-  padding: 12px !important;
-  transition: 0.5s all;
-}
-
-::ng-deep .mat-step-header:hover,
-::ng-deep .mat-step-header:active {
-  background: #30323565 !important;
-}
-
-::ng-deep .mat-step-header[aria-selected="true"] {
-  background: #303235;
-}
-
-.stepper-label-wrapper {
+.step-menu-wrapper {
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
   gap: 12px;
-  margin: 0px;
+  margin: 24px 0px -1px 0px;
   padding: 0px;
+  z-index: 1;
 }
 
-.stepper-label-img {
-  width: 42px;
-  height: 42px;
-  border-radius: 7px;
-  object-fit: fill;
-  margin: 0px;
-  padding: 0px;
-}
-
-.stepper-label-title {
+.step-menu-item {
   font-family: sans-serif;
   font-style: normal;
-  font-weight: 550;
+  font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  text-align: left;
-  color: #f8f8f8;
+  text-align: center;
+  color: rgba(158, 158, 158, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
   margin: 0px;
-  padding: 0px;
+  padding: 0px 8px 8px 8px;
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.active-step-menu-item,
+.step-menu-item:hover,
+.step-menu-item:active {
+  color: #f8f8f8;
+  border-bottom: 1px solid #f8f8f8;
 }
