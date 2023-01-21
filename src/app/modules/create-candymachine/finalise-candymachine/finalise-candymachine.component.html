@@ -1,57 +1,77 @@
 <div class="component-container">
-  <div class="content-container">
-    <!-- Candy machine has not been created -->
-    <div
-      *ngIf="!candyMachine"
-      class="not-found-wrapper"
-    >
-      <p class="section-title">Candy machine not found</p>
+  <div
+    *ngIf="!candyMachine"
+    class="not-found-wrapper"
+  >
+    <p class="section-title text-center">Candy machine not found</p>
+  </div>
+  <div
+    *ngIf="candyMachine"
+    class="cm-content-container"
+  >
+    <div class="addrress-wrapper">
+      <p class="section-title grey">
+        <span class="white">Address:</span>
+        {{ truncatedCandyMachineAddress }}
+      </p>
+      <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
     </div>
-    <!-- Candy machine has been created -->
-    <ng-container *ngIf="candyMachine">
-      <div class="cm-content-container">
-        <div class="image-wrapper">
-          <img [src]="imageUrl" alt="">
+    <div class="detail-items-wrapper">
+      <div class="detail-item">
+        <p class="detail-item-title white">Supply</p>
+        <p class="detail-item-value grey">{{ candyMachineSupply }}</p>
+      </div>
+      <div class="detail-item">
+        <p class="detail-item-title white">Price</p>
+        <p class="detail-item-value grey">
+          {{ candyMachinePrice }}
+          <span class="cyan">SOL</span>
+        </p>
+      </div>
+      <div class="detail-item">
+        <p class="detail-item-title white">Royalty</p>
+        <p class="detail-item-value grey">{{ candyMachineRoyalty }}%</p>
+      </div>
+      <div class="detail-item">
+        <p class="detail-item-title white">Symbol</p>
+        <p class="detail-item-value grey">{{ candyMachineSymbol }}</p>
+      </div>
+      <div class="detail-items-wrapper">
+        <div class="date-detail-item">
+          <p class="detail-item-title white">Mint start date</p>
+          <p class="detail-item-value grey">{{ candyMachineStartDate }}</p>
         </div>
-        <div class="details-container">
-          <div class="cm-address-wrapper">
-            <p class="section-title">{{ truncatedCandyMachineAddress }}</p>
-            <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
-          </div>
-          <div class="details-wrapper">
-            <div class="details-item">
-              <p class="detail-item-title white">Supply</p>
-              <p class="detail-item-value grey">{{ candyMachineSupply }}</p>
-            </div>
-            <div class="details-item">
-              <p class="detail-item-title white">Price</p>
-              <p class="detail-item-value grey">
-                {{ candyMachinePrice }}
-                <span class="cyan">SOL</span>
-              </p>
-            </div>
-            <div class="details-item">
-              <p class="detail-item-title white">Royalty</p>
-              <p class="detail-item-value grey">{{ candyMachineRoyalty }}%</p>
-            </div>
-            <div class="details-item">
-              <p class="detail-item-title white">Symbol</p>
-              <p class="detail-item-value grey">{{ candyMachineSymbol }}</p>
-            </div>
-          </div>
-          <div class="details-wrapper">
-            <div class="date-item">
-              <p class="detail-item-title white">Mint start date</p>
-              <p class="detail-item-value grey">{{ candyMachineStartDate }}</p>
-            </div>
-            <div class="date-item">
-              <p class="detail-item-title white">Mint end date</p>
-              <p class="detail-item-value grey">{{ candyMachineEndDate }}</p>
-            </div>
-          </div>
-          <div class="divider"></div>
+        <div class="date-detail-item">
+          <p class="detail-item-title white">Mint end date</p>
+          <p class="detail-item-value grey">{{ candyMachineEndDate }}</p>
         </div>
       </div>
-    </ng-container>
+    </div>
+    <div class="divider"></div>
+    <p class="section-title white">Creators</p>
+    <div class="creator-items-wrapper">
+      <p
+        *ngIf="!candyMachineHasCreators"
+        class="section-text grey"
+      >
+        No creators
+      </p>
+      <ng-container *ngIf="candyMachineHasCreators">
+        <div
+          *ngFor="let creator of candyMachine?.creators"
+          class="creator-item"
+        >
+          <div>
+            <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+          </div>
+          <p class="section-text grey">
+            {{ truncatePublicKey(creator.address) }}
+            <span class="white">-</span>
+            {{ creator.share }}%
+          </p>
+        </div>
+      </ng-container>
+    </div>
+    <div class="divider"></div>
   </div>
 </div>

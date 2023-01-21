@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CandyMachine } from '@metaplex-foundation/js';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { truncateAddress } from 'src/app/common/utils/utils';
 
 @Component({
@@ -10,9 +10,6 @@ import { truncateAddress } from 'src/app/common/utils/utils';
 })
 export class FinaliseCandymachineComponent implements OnInit {
   @Input() candyMachine: CandyMachine | null = null;
-
-  imageUrl: string =
-    'https://pe3ulbgyicmxrp54kqzucge7m53hf4srdvjzo5227zlt2w35x4na.arweave.net/eTdFhNhAmXi_vFQzQRifZ3Zy8lEdU5d3Wv5XPVt9vxo?ext=png';
 
   constructor() { }
 
@@ -52,7 +49,15 @@ export class FinaliseCandymachineComponent implements OnInit {
       : 'N/A';
   }
 
+  get candyMachineHasCreators(): boolean {
+    return (this.candyMachine?.creators?.length ?? 0) > 0;
+  }
+
   ngOnInit(): void {
+  }
+
+  truncatePublicKey(publicKey: PublicKey): string {
+    return truncateAddress(publicKey.toString());
   }
 
 }
