@@ -14,7 +14,12 @@
         <span class="white">Address:</span>
         {{ truncatedCandyMachineAddress }}
       </p>
-      <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+      <div
+        class="copy-cm-address-wrapper"
+        (click)="copyCandyMachineAddress()"
+      >
+        <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+      </div>
     </div>
     <div class="detail-items-wrapper">
       <div class="detail-item">
@@ -58,13 +63,16 @@
       </p>
       <ng-container *ngIf="candyMachineHasCreators">
         <div
-          *ngFor="let creator of candyMachine?.creators"
+          *ngFor="let creator of candyMachine?.creators; let idx = index"
           class="creator-item-wrapper"
         >
           <div class="creator-address-wrapper relative">
             <p class="creator-item-title grey">Address</p>
             <p class="section-text text-left white">{{ truncatePublicKey(creator.address) }}</p>
-            <div class="copy-creator-address-wrapper">
+            <div
+              class="copy-creator-address-wrapper"
+              (click)="copyCreatorAddress(idx)"
+            >
               <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
             </div>
           </div>

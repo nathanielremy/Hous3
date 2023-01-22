@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CandyMachine } from '@metaplex-foundation/js';
+import { CandyMachine, formatDateTime } from '@metaplex-foundation/js';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { truncateAddress } from 'src/app/common/utils/utils';
+import { SnackService } from 'src/app/service/snack.service';
 
 @Component({
   selector: 'app-finalise-candymachine',
@@ -11,7 +13,10 @@ import { truncateAddress } from 'src/app/common/utils/utils';
 export class FinaliseCandymachineComponent implements OnInit {
   @Input() candyMachine: CandyMachine | null = null;
 
-  constructor() { }
+  constructor(
+    private clipboard: Clipboard,
+    private snackService: SnackService
+  ) { }
 
   get truncatedCandyMachineAddress(): string {
     return truncateAddress(this.candyMachine?.address?.toString());
@@ -39,13 +44,13 @@ export class FinaliseCandymachineComponent implements OnInit {
 
   get candyMachineStartDate() {
     return this.candyMachine?.candyGuard?.guards?.startDate?.date
-      ? this.candyMachine.candyGuard.guards.startDate.date
+      ? formatDateTime(this.candyMachine.candyGuard.guards.startDate.date)
       : 'N/A';
   }
 
   get candyMachineEndDate() {
     return this.candyMachine?.candyGuard?.guards?.endDate?.date
-      ? this.candyMachine.candyGuard.guards.endDate.date
+      ? formatDateTime(this.candyMachine.candyGuard.guards.endDate.date)
       : 'N/A';
   }
 
@@ -60,4 +65,21 @@ export class FinaliseCandymachineComponent implements OnInit {
     return truncateAddress(publicKey.toString());
   }
 
+  copyCandyMachineAddress() {
+    if (this.candyMachine?.address) {
+      this.copyToClipBoard(this.candyMachine.address.toString());
+    }
+  }
+
+  copyCreatorAddress(idx: number) {
+    if (this.candyMachine?.creators[idx]) {
+      this.copyToClipBoard(this.candyMachine.creators[idx].address.toString());
+    }
+  }
+
+  copyToClipBoard(string: string) {
+    if (this.clipboard.copy(string)) {
+      this.snackService.showSuccess('Copied!');
+    }
+  }
 }
