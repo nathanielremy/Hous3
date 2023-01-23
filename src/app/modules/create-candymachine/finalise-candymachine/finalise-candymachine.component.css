@@ -1,0 +1,250 @@
+.component-container {
+  min-width: 100%;
+  max-width: 100%;
+  margin: 24px 0px;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #303235;
+}
+
+.section-title {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: left;
+  margin: 0px;
+  padding: 0px;
+}
+
+.section-text {
+  font-family: sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 550;
+  margin: 0px;
+  padding: 0px;
+}
+
+.not-found-wrapper {
+  height: 499px;
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+.cm-content-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.addrress-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-cm-address-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+.copy-address-icon {
+  min-width: 20px;
+  max-width: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  object-fit: contain;
+  color: #525355;
+  transition: 0.5s all;
+  cursor: pointer;
+}
+
+.copy-address-icon:hover,
+.copy-address-icon:active  {
+  color: #f8f8f8;
+}
+
+.detail-items-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.detail-item {
+  height: auto;
+  width: max(calc(25% - 9px), 150px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  overflow: hidden;
+  background: #111112;
+  border-radius: 12px;
+  margin: 0px;
+  padding: 12px;
+}
+
+.detail-item-title {
+  text-align: center;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 550;
+  margin: 0px;
+  padding: 0px;
+}
+
+.detail-item-value {
+  text-align: center;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 550;
+  margin: 0px;
+  padding: 0px;
+}
+
+.date-detail-item {
+  height: auto;
+  width: max(calc(50% - 6px), 175px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  overflow: hidden;
+  background: #111112;
+  border-radius: 12px;
+  margin: 0px;
+  padding: 12px;
+}
+
+.creators-container,
+.mint-settings-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.creator-item-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.creator-item-title {
+  font-family: sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  margin: 0px;
+  padding: 0px;
+}
+
+.creator-address-wrapper {
+  height: auto;
+  width: calc(70% - 6px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0px;
+  overflow: hidden;
+  background: #111112;
+  border-radius: 12px;
+  margin: 0px;
+  padding: 12px;
+}
+
+.copy-creator-address-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.creator-share-wrapper {
+  height: auto;
+  width: calc(30% - 6px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0px;
+  overflow: hidden;
+  background: #111112;
+  border-radius: 12px;
+  margin: 0px;
+  padding: 12px;
+}
+
+.mint-settings-wrapper {
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  background: #111112;
+  border-radius: 12px;
+  margin: 0px;
+  padding: 24px;
+}
+
+.indicator-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 12px 18px;
+  background: #000000;
+  border-radius: 40px;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+}
+
+.indicator-label-icon {
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
+}

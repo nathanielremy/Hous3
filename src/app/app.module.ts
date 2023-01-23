@@ -24,6 +24,10 @@ import { ProgressBarComponent } from './common/progress-bar/progress-bar.compone
 import { HeaderComponent } from './common/header/header.component';
 import { ToolsComponent } from './modules/tools/tools.component';
 import { CreateTokenComponent } from './modules/create-token/create-token.component';
+import { CreateCandymachineComponent } from './modules/create-candymachine/create-candymachine.component';
+import { ConfigureCandymachineComponent } from './modules/create-candymachine/configure-candymachine/configure-candymachine.component';
+import { FinaliseCandymachineComponent } from './modules/create-candymachine/finalise-candymachine/finalise-candymachine.component';
+import { InsertCandymachineItemsComponent } from './modules/create-candymachine/insert-candymachine-items/insert-candymachine-items.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +40,10 @@ import { CreateTokenComponent } from './modules/create-token/create-token.compon
     HeaderComponent,
     ToolsComponent,
     CreateTokenComponent,
+    CreateCandymachineComponent,
+    ConfigureCandymachineComponent,
+    FinaliseCandymachineComponent,
+    InsertCandymachineItemsComponent,
   ],
   imports: [
     RouterModule,

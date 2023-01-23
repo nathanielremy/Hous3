@@ -1,0 +1,110 @@
+<div class="component-container">
+  <div
+    *ngIf="!candyMachine"
+    class="not-found-wrapper"
+  >
+    <p class="section-title text-center grey">Candy machine not found</p>
+  </div>
+  <div
+    *ngIf="candyMachine"
+    class="cm-content-container"
+  >
+    <div class="addrress-wrapper">
+      <p class="section-title grey">
+        <span class="white">Address:</span>
+        {{ truncatedCandyMachineAddress }}
+      </p>
+      <div
+        class="copy-cm-address-wrapper"
+        (click)="copyCandyMachineAddress()"
+      >
+        <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+      </div>
+    </div>
+    <div class="detail-items-wrapper">
+      <div class="detail-item">
+        <p class="detail-item-title white">Supply</p>
+        <p class="detail-item-value grey">{{ candyMachineSupply }}</p>
+      </div>
+      <div class="detail-item">
+        <p class="detail-item-title white">Price</p>
+        <p class="detail-item-value grey">
+          {{ candyMachinePrice }}
+          <span class="cyan">SOL</span>
+        </p>
+      </div>
+      <div class="detail-item">
+        <p class="detail-item-title white">Royalty</p>
+        <p class="detail-item-value grey">{{ candyMachineRoyalty }}%</p>
+      </div>
+      <div class="detail-item">
+        <p class="detail-item-title white">Symbol</p>
+        <p class="detail-item-value grey">{{ candyMachineSymbol }}</p>
+      </div>
+      <div class="detail-items-wrapper">
+        <div class="date-detail-item">
+          <p class="detail-item-title white">Mint start date</p>
+          <p class="detail-item-value grey">{{ candyMachineStartDate }}</p>
+        </div>
+        <div class="date-detail-item">
+          <p class="detail-item-title white">Mint end date</p>
+          <p class="detail-item-value grey">{{ candyMachineEndDate }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="creators-container">
+      <p class="section-title white">Creators</p>
+      <p
+        *ngIf="!candyMachineHasCreators"
+        class="section-text text-left grey"
+      >
+        No creators
+      </p>
+      <ng-container *ngIf="candyMachineHasCreators">
+        <div
+          *ngFor="let creator of candyMachine?.creators; let idx = index"
+          class="creator-item-wrapper"
+        >
+          <div class="creator-address-wrapper relative">
+            <p class="creator-item-title grey">Address</p>
+            <p class="section-text text-left white">{{ truncatePublicKey(creator.address) }}</p>
+            <div
+              class="copy-creator-address-wrapper"
+              (click)="copyCreatorAddress(idx)"
+            >
+              <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
+            </div>
+          </div>
+          <div class="creator-share-wrapper">
+            <p class="creator-item-title grey">Share</p>
+            <p class="section-text text-left white">{{ creator.share }}%</p>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="divider"></div>
+    <div class="mint-settings-container">
+      <p class="section-title white">
+        Mint Settings:
+        <span class="grey">{{ displayableMintType }}</span>
+      </p>
+      <div class="mint-settings-wrapper">
+        <div *ngIf="itemsFullyLoaded" class="indicator-label green">
+          <span class="iconify indicator-label-icon" data-icon="material-symbols:check-circle-outline-rounded"></span>
+          <span>Items are ready to mint</span>
+        </div>
+        <div *ngIf="!itemsFullyLoaded" class="indicator-label red">
+          <span class="iconify indicator-label-icon" data-icon="material-symbols:error-outline-rounded"></span>
+          <span>Items have not been fully loaded - visit Assets tab</span>
+        </div>
+        <button
+          class="button-secondary"
+          (click)="openCandyMachineItemsModal()"
+        >
+          View items
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

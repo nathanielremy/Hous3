@@ -13,6 +13,7 @@ import {
   JsonMetadata,
   UploadMetadataOutput,
   CreateSftInput,
+  CreateCandyMachineInput
 } from '@metaplex-foundation/js';
 import { Connection, PublicKey, Signer } from '@solana/web3.js';
 import {
@@ -125,5 +126,49 @@ export class MetaplexService {
     };
 
     return this.metaplex.nfts().createSft(sftInput, options);
+  }
+
+  createCandyMachine(candyMachineSettings: CreateCandyMachineInput) {
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    const options: OperationOptions = {
+      payer: this.getIdentity(),
+      commitment: 'confirmed',
+      signal: abortController.signal
+    };
+
+    return this.metaplex.candyMachines().create(candyMachineSettings, options);
+  }
+
+  getNft(address: PublicKey, fullyLoaded: boolean) {
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    return this.metaplex.nfts().findByMint(
+      {
+        mintAddress: address,
+        loadJsonMetadata: fullyLoaded
+      },
+      {
+        signal: abortController.signal
+      }
+    );
+  }
+
+  // MARK: For building only. Remove later
+  getCandyMachine(address: PublicKey) {
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    // MARK: Here only for testing
+    this.metaplex = Metaplex
+      .make(new Connection(RPC_URL_DEVNET))
+      .use(bundlrStorage(BUNDLR_CONFIG_DEVNET));
+
+    return this.metaplex.candyMachines().findByAddress(
+      { address: address },
+      { signal: abortController.signal }
+    );
   }
 }
