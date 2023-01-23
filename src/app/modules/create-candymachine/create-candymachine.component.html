@@ -66,12 +66,11 @@
           [candyMachine]="candyMachine"
           (candyMachineEmitter)="setCandyMachine($event)"
         ></app-configure-candymachine>
-        <h3
+        <app-insert-candymachine-items
           *ngIf="selectedCreationStage == ASSETS_STAGE"
-          class="white"
-        >
-          Insert
-        </h3>
+          [candyMachine]="candyMachine"
+          (candyMachineEmitter)="setCandyMachine($event)"
+        ></app-insert-candymachine-items>
         <app-finalise-candymachine
           *ngIf="selectedCreationStage == FINALISE_STAGE"
           [candyMachine]="candyMachine"
