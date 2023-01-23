@@ -3,7 +3,7 @@
     *ngIf="!candyMachine"
     class="not-found-wrapper"
   >
-    <p class="section-title text-center">Candy machine not found</p>
+    <p class="section-title text-center grey">Candy machine not found</p>
   </div>
   <div
     *ngIf="candyMachine"
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="divider"></div>
-    <div class="creators-wrapper">
+    <div class="creators-container">
       <p class="section-title white">Creators</p>
       <p
         *ngIf="!candyMachineHasCreators"
@@ -84,5 +84,27 @@
       </ng-container>
     </div>
     <div class="divider"></div>
+    <div class="mint-settings-container">
+      <p class="section-title white">
+        Mint Settings:
+        <span class="grey">{{ displayableMintType }}</span>
+      </p>
+      <div class="mint-settings-wrapper">
+        <div *ngIf="itemsFullyLoaded" class="indicator-label green">
+          <span class="iconify indicator-label-icon" data-icon="material-symbols:check-circle-outline-rounded"></span>
+          <span>Items are ready to mint</span>
+        </div>
+        <div *ngIf="!itemsFullyLoaded" class="indicator-label red">
+          <span class="iconify indicator-label-icon" data-icon="material-symbols:error-outline-rounded"></span>
+          <span>Items have not been fully loaded - visit Assets tab</span>
+        </div>
+        <button
+          class="button-secondary"
+          (click)="openCandyMachineItemsModal()"
+        >
+          View items
+        </button>
+      </div>
+    </div>
   </div>
 </div>

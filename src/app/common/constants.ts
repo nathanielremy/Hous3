@@ -17,6 +17,8 @@ export const BUNDLR_CONFIG_DEVNET = {
   timeout: METAPLEX_ABORT_TIMEOUT,
 };
 
+export const DEFAULT_PRE_REVEAL_URL = 'https://arweave.net/placeholder';
+
 export const EMPTY_STRING: string = '';
 
 export const FILE_TYPE_PNG: string = 'image/png';

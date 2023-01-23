@@ -25,6 +25,7 @@ import { MetaplexService } from 'src/app/service/metaplex.service';
 import { SnackService } from 'src/app/service/snack.service';
 import { WalletService } from 'src/app/service/wallet.service';
 import { isValidSolanaAddress, truncateAddress } from 'src/app/common/utils/utils';
+import { DEFAULT_PRE_REVEAL_URL } from 'src/app/common/constants';
 
 @Component({
   selector: 'app-configure-candymachine',
@@ -271,7 +272,7 @@ export class ConfigureCandymachineComponent implements OnInit {
       return {
         type: 'hidden',
         name: this.nftName + (this.isNftNameIndexed ? ' #$ID+1$' : ''),
-        uri: 'https://arweave.net/placeholder',
+        uri: DEFAULT_PRE_REVEAL_URL,
         hash: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
       } as CandyMachineHiddenSettings;
     } else {

@@ -138,7 +138,8 @@
   padding: 12px;
 }
 
-.creators-wrapper {
+.creators-container,
+.mint-settings-container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -206,4 +207,44 @@
   border-radius: 12px;
   margin: 0px;
   padding: 12px;
+}
+
+.mint-settings-wrapper {
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  background: #111112;
+  border-radius: 12px;
+  margin: 0px;
+  padding: 24px;
+}
+
+.indicator-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 12px 18px;
+  background: #000000;
+  border-radius: 40px;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+}
+
+.indicator-label-icon {
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
 }

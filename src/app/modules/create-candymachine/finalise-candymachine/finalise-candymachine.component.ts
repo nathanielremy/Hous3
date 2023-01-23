@@ -4,6 +4,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { truncateAddress } from 'src/app/common/utils/utils';
 import { SnackService } from 'src/app/service/snack.service';
+import { DEFAULT_PRE_REVEAL_URL } from 'src/app/common/constants';
 
 @Component({
   selector: 'app-finalise-candymachine',
@@ -58,6 +59,33 @@ export class FinaliseCandymachineComponent implements OnInit {
     return (this.candyMachine?.creators?.length ?? 0) > 0;
   }
 
+  get itemsFullyLoaded(): boolean {
+    return this.candyMachine?.itemSettings
+      ? (
+          this.candyMachine.itemSettings.type == 'configLines' &&
+          this.candyMachine.isFullyLoaded
+        ) ||
+        (
+          this.candyMachine.itemSettings.type == 'hidden' &&
+          this.candyMachine.itemSettings.uri != DEFAULT_PRE_REVEAL_URL
+        )
+      : false;
+  }
+
+  get displayableMintType(): string {
+    if (this.candyMachine?.itemSettings) {
+      if (this.candyMachine.itemSettings.type == 'configLines') {
+        return this.candyMachine.itemSettings.isSequential
+          ? 'Sequential'
+          : 'Random';
+      } else {
+        return 'Pre-reveal';
+      }
+    } else {
+      return 'N/A';
+    }
+  }
+
   ngOnInit(): void {
   }
 
@@ -81,5 +109,11 @@ export class FinaliseCandymachineComponent implements OnInit {
     if (this.clipboard.copy(string)) {
       this.snackService.showSuccess('Copied!');
     }
+  }
+
+  openCandyMachineItemsModal() {
+    this.snackService.showSnackBar(
+      'TODO: open candy machine items modal'
+    );
   }
 }
