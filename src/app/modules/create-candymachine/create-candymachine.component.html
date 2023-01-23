@@ -18,55 +18,63 @@
     <app-header></app-header>
     <div class="w-full flex flex-col items-center">
       <div class="divider"></div>
-      <div class="page-title-container">
-        <div class="content-container">
-          <div class="page-title-wrapper">
-            <h3 class="page-title">Create a Candy Machine</h3>
-            <div class="created-address-wrapper">
-              <p class="created-address">
-                Your candy machine: {{ truncatedCandyMachineAddress }}
-              </p>
-              <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
-            </div>
+      <div class="content-container">
+        <div class="page-title-wrapper">
+          <h3 class="page-title">Launch a Candy Machine</h3>
+          <div class="created-address-wrapper">
+            <p class="created-address">
+              Your candy machine: {{ truncatedCandyMachineAddress }}
+            </p>
+            <span class="iconify copy-address-icon" data-icon="uil:copy"></span>
           </div>
         </div>
       </div>
       <div class="divider"></div>
-      <div class="content-container flex justify-center">
-        <div class="stepper-wrapper">
-          <mat-stepper [orientation]="stepperOrientation">
-            <mat-step>
-              <ng-template matStepLabel aria-selected="true">
-                <div class="stepper-label-wrapper">
-                  <img class="stepper-label-img" src="../../../assets/icons/step-one-icon.png" alt="">
-                  <h3 class="stepper-label-title white">Configure contract</h3>
-                </div>
-              </ng-template>
-              <app-configure-candymachine
-                [candyMachine]="candyMachine"
-                (candyMachineEmitter)="setCandyMachine($event)"
-              ></app-configure-candymachine>
-            </mat-step>
-            <mat-step>
-              <ng-template matStepLabel aria-selected="true">
-                <div class="stepper-label-wrapper">
-                  <img class="stepper-label-img" src="../../../assets/icons/step-two-icon.png" alt="">
-                  <h3 class="stepper-label-title white">Insert assets</h3>
-                </div>
-              </ng-template>
-              <h3 class="white">Insert</h3>
-            </mat-step>
-            <mat-step>
-              <ng-template matStepLabel aria-selected="true">
-                <div class="stepper-label-wrapper">
-                  <img class="stepper-label-img" src="../../../assets/icons/step-three-icon.png" alt="">
-                  <h3 class="stepper-label-title white">Finalise</h3>
-                </div>
-              </ng-template>
-              <h3 class="white">Finalise</h3>
-            </mat-step>
-          </mat-stepper>
+      <div class="content-container flex flex-col justify-center">
+        <div class="step-menu-wrapper">
+          <div
+            class="step-menu-item"
+            [ngClass]="{
+              'active-step-menu-item' : selectedCreationStage == SETTINGS_STAGE
+            }"
+            (click)="setCreationStage(SETTINGS_STAGE)"
+          >
+            <span>Settings</span>
+          </div>
+          <div
+            class="step-menu-item"
+            [ngClass]="{
+              'active-step-menu-item' : selectedCreationStage == ASSETS_STAGE
+            }"
+            (click)="setCreationStage(ASSETS_STAGE)"
+          >
+            <span>Assets</span>
+          </div>
+          <div
+            class="step-menu-item"
+            [ngClass]="{
+              'active-step-menu-item' : selectedCreationStage == FINALISE_STAGE
+            }"
+            (click)="setCreationStage(FINALISE_STAGE)"
+          >
+            <span>Finalise</span>
+          </div>
         </div>
+        <div class="divider"></div>
+        <app-configure-candymachine
+          *ngIf="selectedCreationStage == SETTINGS_STAGE"
+          [candyMachine]="candyMachine"
+          (candyMachineEmitter)="setCandyMachine($event)"
+        ></app-configure-candymachine>
+        <app-insert-candymachine-items
+          *ngIf="selectedCreationStage == ASSETS_STAGE"
+          [candyMachine]="candyMachine"
+          (candyMachineEmitter)="setCandyMachine($event)"
+        ></app-insert-candymachine-items>
+        <app-finalise-candymachine
+          *ngIf="selectedCreationStage == FINALISE_STAGE"
+          [candyMachine]="candyMachine"
+        ></app-finalise-candymachine>
       </div>
     </div>
   </body>

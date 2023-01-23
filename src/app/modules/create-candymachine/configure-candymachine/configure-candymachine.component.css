@@ -4,30 +4,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.sections-container {
-  min-width: 100%;
-  max-width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
   gap: 24px;
   margin: 0px;
   padding: 24px 0px;
 }
 
-.input-container {
-  width: min(500px, 100%);
+.section-wrapper {
+  min-width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 24px;
   margin: 0px;
   padding: 24px;
-  background: #020a03;
   border-radius: 12px;
   border: 1px solid #303235;
+}
+
+.main-input-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
 }
 
 .main-input-title {
@@ -84,14 +84,14 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 12px;
+  gap: 6px 12px;
   margin: 0px;
   padding: 0px;
 }
 
 .creator-share-input {
-  min-width: 65px;
-  max-width: 65px;
+  min-width: 75px;
+  max-width: 75px;
 }
 
 .delete-creator-wrapper {
@@ -115,6 +115,153 @@
 .delete-creator-icon:hover,
 .delete-creator-icon:active  {
   color: #ea5b52;
+}
+
+.indicator-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 12px 18px;
+  background: #1a1b1e;
+  border-radius: 40px;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+}
+
+.indicator-label-icon {
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
+}
+
+.learn-create-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.collection-nft-container {
+  width: min(500px, 100%);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.validate-nft-button {
+  min-width: 92px;
+  max-width: 92px;
+}
+
+.collection-nft-display-container {
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.collection-nft-image-wrapper {
+  min-height: 140px;
+  max-height: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  border-radius: 12px;
+  border: 1px solid #303235;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collection-nft-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.collection-nft-status-wrapper {
+  /* .collection-nft-container width - image width - gap */
+  max-width: min(calc(500px - 140px - 24px), 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.collection-nft-status-wrapper .input-title {
+  min-width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-settings-toggle-wrapper {
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.item-settings-toggle-item {
+  width: 90px;
+  height: auto;
+  margin: 0px;
+  padding: 0px 8px 8px 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(158, 158, 158, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.item-settings-toggle-item:hover,
+.item-settings-toggle-item:active {
+  border-bottom: 1px solid rgba(158, 158, 158, 1);
+}
+
+.active-item-settings-toggle-item {
+  color: #f8f8f8;
+  border-bottom: 1px solid #f8f8f8;
+}
+
+.item-settings-container {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+  margin: 0px;
+  margin-top: -18px;
+  padding: 0px;
 }
 
 @media (max-width: 500px) {

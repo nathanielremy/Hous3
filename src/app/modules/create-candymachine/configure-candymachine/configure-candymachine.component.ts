@@ -11,7 +11,11 @@ import {
   CandyMachineConfigLineSettings,
   CandyMachineHiddenSettings,
   CreateCandyMachineInput,
+  isNft,
+  isNftWithToken,
   MetaplexError,
+  Nft,
+  NftWithToken,
   sol,
   toBigNumber
 } from '@metaplex-foundation/js';
@@ -21,6 +25,7 @@ import { MetaplexService } from 'src/app/service/metaplex.service';
 import { SnackService } from 'src/app/service/snack.service';
 import { WalletService } from 'src/app/service/wallet.service';
 import { isValidSolanaAddress, truncateAddress } from 'src/app/common/utils/utils';
+import { DEFAULT_PRE_REVEAL_URL } from 'src/app/common/constants';
 
 @Component({
   selector: 'app-configure-candymachine',
@@ -34,6 +39,10 @@ export class ConfigureCandymachineComponent implements OnInit {
   walletAdapter: Adapter | null = null;
   rpcEndpoint: string | null = null;
 
+  isCreatingCandyMachine: boolean = false;
+  isValidatingCollectionNft: boolean = false;
+
+  // candyMachineSettings inputs
   royalty: number;
   supply: number;
   symbol: string = '';
@@ -43,6 +52,16 @@ export class ConfigureCandymachineComponent implements OnInit {
     verified: boolean,
     share: number
   }[] = [];
+
+  // itemSettings inputs
+  isItemSettingsHidden: boolean = false;
+  nftName: string = '';
+  isNftNameIndexed: boolean = false;
+  isMintSequential: boolean = false;
+
+  // Collection Nft inputs
+  collectionNftAddress: string = '';
+  collectionNft: Nft | NftWithToken | null = null;
 
   constructor(
     private walletService: WalletService,
@@ -54,6 +73,16 @@ export class ConfigureCandymachineComponent implements OnInit {
     return this.walletAdapter?.publicKey
       ? truncateAddress(this.walletAdapter?.publicKey?.toString())
       : 'Connect wallet';
+  }
+
+  get canValidateCollectionNft(): boolean {
+    return !this.isValidatingCollectionNft && !this.isCreatingCandyMachine;
+  }
+
+  get compareCollectionNftUpdateAuthority(): boolean {
+    return this.collectionNft
+      ? this.mxService.compareIdentity(this.collectionNft.updateAuthorityAddress)
+      : false;
   }
 
   ngOnInit(): void {
@@ -85,6 +114,49 @@ export class ConfigureCandymachineComponent implements OnInit {
 
   deleteCreator(idx: number) {
     this.creators.splice(idx, 1);
+  }
+
+  async validateCollectionNft() {
+    if (!this.canValidateCollectionNft) return;
+
+    if (this.validateUserConnection()) {
+      if (
+        !this.collectionNftAddress.trim() ||
+        !isValidSolanaAddress(this.collectionNftAddress)
+      ) {
+        this.snackService.showWarning('Please enter a valid Solana Nft address');
+        return;
+      }
+
+      this.isValidatingCollectionNft = true;
+
+      try {
+        const nft = await this.mxService.getNft(new PublicKey(this.collectionNftAddress), true);
+        if (isNft(nft) || isNftWithToken(nft)) {
+          this.collectionNft = nft;
+        } else {
+          this.collectionNft = null;
+          this.snackService.showError('Token does not follow the Nft standard');
+        }
+      }
+      catch (err) {
+        this.snackService.showError(
+          `${(err instanceof MetaplexError) ? (err.cause ?? 'Account not found') : err}`
+        );
+        console.log(`err: ${err}`);
+      }
+
+      this.isValidatingCollectionNft = false;
+    }
+  }
+
+  replaceCollectionNft() {
+    this.collectionNftAddress = '';
+    this.collectionNft = null;
+  }
+
+  setItemSettingsHidden(hidden: boolean) {
+    this.isItemSettingsHidden = hidden;
   }
 
   async createCandyMachine() {
@@ -153,6 +225,11 @@ export class ConfigureCandymachineComponent implements OnInit {
       return null;
     }
 
+    if (!this.collectionNft || !this.compareCollectionNftUpdateAuthority) {
+      this.snackService.showWarning('Collection Nft has not been validated');
+      return null;
+    }
+
     const itemSettings = this.constructCandyMachineItemSettings();
     if (!itemSettings || itemSettings == null) return null;
 
@@ -162,7 +239,7 @@ export class ConfigureCandymachineComponent implements OnInit {
     const candyMachineSettings = {
       authority: this.mxService.getIdentity(),
       collection: {
-        address: new PublicKey('7ymeaNmfLZ6SCyVRvupL9tpZaLa5fMJpwHTNYhjob4uQ'),
+        address: this.collectionNft.address,
         updateAuthority: this.mxService.getIdentity()
       },
       sellerFeeBasisPoints: Math.trunc(this.royalty * 100),
@@ -186,16 +263,28 @@ export class ConfigureCandymachineComponent implements OnInit {
 
   constructCandyMachineItemSettings(
   ): CandyMachineHiddenSettings | CandyMachineConfigLineSettings | null {
-    const isPreReveal = true;
-    if (isPreReveal) {
-      return {
-        type: "hidden",
-        name: "Hous3 #$ID+1$",
-        uri: "https://arweave.net/ijoavX6imWfU4UPh4C90NM3VgGy22KUwHNfTGL4iqRg",
-        hash: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-      };
+    if (!this.nftName.trim() || this.nftName.length > 29) {
+      this.snackService.showWarning('Please enter a valid Nft name. Max 29 characters');
+      return null;
     }
-    return null;
+
+    if (this.isItemSettingsHidden) {
+      return {
+        type: 'hidden',
+        name: this.nftName + (this.isNftNameIndexed ? ' #$ID+1$' : ''),
+        uri: DEFAULT_PRE_REVEAL_URL,
+        hash: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      } as CandyMachineHiddenSettings;
+    } else {
+      return {
+        type: 'configLines',
+        prefixName: this.nftName + (this.isNftNameIndexed ? ' #$ID+1$' : ''),
+        nameLength: 0,
+        prefixUri: 'https://arweave.net/',
+        uriLength: 43,
+        isSequential: this.isMintSequential
+      } as CandyMachineConfigLineSettings;
+    }
   }
 
   constructCandyMachineGuards(): CandyGuardsSettings | null {

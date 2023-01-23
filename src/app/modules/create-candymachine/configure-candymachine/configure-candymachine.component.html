@@ -1,107 +1,244 @@
 <div class="component-container">
-  <div class="sections-container">
-    <!-- Candy machine settings -->
-    <div class="input-container">
-      <p class="main-input-title">Settings</p>
-      <div class="divider"></div>
-      <div class="input-wrapper">
-        <p class="input-title">Update Authority</p>
-        <input
-          class="default-input"
-          type="text"
-          [placeholder]="updateAuthorityPlaceholder"
-          [disabled]="true"
-        />
-        <p class="input-sub-title">The wallet responsible for editing & deleting the candy machine.</p>
-      </div>
-      <div class="input-wrapper">
-        <p class="input-title">Royalty %</p>
-        <input
-          class="default-input"
-          type="number"
-          max="10"
-          min="0"
-          placeholder="0"
-          [(ngModel)]="royalty"
-        />
-        <p class="input-sub-title">The share of secondary sales to be split amongst creators. Max 10%.</p>
-      </div>
-      <div class="input-wrapper">
-        <p class="input-title">Supply</p>
-        <input
-          class="default-input"
-          type="number"
-          max="10000"
-          min="0"
-          placeholder="1234"
-          [(ngModel)]="supply"
-        />
-        <p class="input-sub-title">The total amount of NFTs available to mint. Max 10k.</p>
-      </div>
-      <div class="input-wrapper">
-        <p class="input-title">Symbol</p>
-        <input
-          class="default-input"
-          type="text"
-          maxlength="10"
-          placeholder="BAYC"
-          [(ngModel)]="symbol"
-        />
-        <p class="input-sub-title">A symbol to easily identify your tokens.</p>
-      </div>
-      <div class="input-wrapper">
-        <p class="input-title">NFTs Mutable?</p>
-        <mat-slide-toggle
-          [(ngModel)]="isMutable"
-        ></mat-slide-toggle>
-        <p class="input-sub-title">Ability to update NFTs once minted. Recommended on.</p>
-      </div>
-      <div class="input-wrapper">
-        <p class="input-title">Creators</p>
-        <div
-          *ngFor="let creator of creators; let idx = index"
-          class="creator-input-wrapper"
-        >
-          <div class="input-wrapper">
-            <input
-              class="default-input"
-              type="text"
-              maxlength="58"
-              placeholder="Creator wallet address"
-              [(ngModel)]="creator.address"
-            />
-          </div>
-          <div class="flex flex-row justify-start items-center">
-            <input
-              class="default-input creator-share-input"
-              type="number"
-              max="10"
-              min="0"
-              placeholder="%"
-              [(ngModel)]="creator.share"
-            />
-            <div
-              class="delete-creator-wrapper"
-              (click)="deleteCreator(idx)"
-            >
-              <span class="iconify delete-creator-icon" data-icon="uil:trash-alt"></span>
-            </div>
+  <!-- Candy machine settings -->
+  <div class="section-wrapper">
+    <p class="main-input-title">Settings</p>
+    <div class="divider"></div>
+    <div class="input-wrapper">
+      <p class="input-title">Update Authority</p>
+      <input
+        class="default-input"
+        type="text"
+        [placeholder]="updateAuthorityPlaceholder"
+        [disabled]="true"
+      />
+      <p class="input-sub-title">The wallet responsible for editing & deleting the candy machine.</p>
+    </div>
+    <div class="input-wrapper">
+      <p class="input-title">Royalty %</p>
+      <input
+        class="default-input"
+        type="number"
+        max="10"
+        min="0"
+        placeholder="0"
+        [(ngModel)]="royalty"
+      />
+      <p class="input-sub-title">The share of secondary sales to be split amongst creators. Max 10%.</p>
+    </div>
+    <div class="input-wrapper">
+      <p class="input-title">Supply</p>
+      <input
+        class="default-input"
+        type="number"
+        max="10000"
+        min="0"
+        placeholder="1234"
+        [(ngModel)]="supply"
+      />
+      <p class="input-sub-title">The total amount of NFTs available to mint. Max 10k.</p>
+    </div>
+    <div class="input-wrapper">
+      <p class="input-title">Symbol</p>
+      <input
+        class="default-input"
+        type="text"
+        maxlength="10"
+        placeholder="BAYC"
+        [(ngModel)]="symbol"
+      />
+      <p class="input-sub-title">A symbol to easily identify your tokens.</p>
+    </div>
+    <div class="input-wrapper">
+      <p class="input-title">NFTs Mutable?</p>
+      <mat-slide-toggle
+        [(ngModel)]="isMutable"
+      ></mat-slide-toggle>
+      <p class="input-sub-title">Ability to update NFTs once minted. Recommended on.</p>
+    </div>
+    <div class="input-wrapper">
+      <p class="input-title">Creators</p>
+      <div
+        *ngFor="let creator of creators; let idx = index"
+        class="creator-input-wrapper"
+      >
+        <div class="input-wrapper">
+          <input
+            class="default-input"
+            type="text"
+            maxlength="58"
+            placeholder="Creator wallet address"
+            [(ngModel)]="creator.address"
+          />
+        </div>
+        <div class="flex flex-row justify-start items-center">
+          <input
+            class="default-input creator-share-input"
+            type="number"
+            max="10"
+            min="0"
+            placeholder="%"
+            [(ngModel)]="creator.share"
+          />
+          <div
+            class="delete-creator-wrapper"
+            (click)="deleteCreator(idx)"
+          >
+            <span class="iconify delete-creator-icon" data-icon="uil:trash-alt"></span>
           </div>
         </div>
-        <button
-          *ngIf="creators.length < 4"
-          class="button-secondary"
-          (click)="addCreator()"
+      </div>
+      <button
+        *ngIf="creators.length < 4"
+        class="button-secondary"
+        (click)="addCreator()"
+      >
+        Add creator
+      </button>
+      <p class="input-sub-title">Creator addresses and their respective share of royalties.</p>
+    </div>
+  </div>
+  <!-- Collection Nft settings -->
+  <div class="section-wrapper">
+    <div class="main-input-title-wrapper">
+      <p class="main-input-title">Collection NFT</p>
+      <div class="learn-create-wrapper">
+        <a
+          href="https://docs.metaplex.com/programs/token-metadata/certified-collections"
+          target="_blank"
         >
-          Add creator
-        </button>
-        <p class="input-sub-title">Creator addresses and their respective share of royalties.</p>
+          <p class="input-sub-title text-clickable text-center">Learn more</p>
+        </a>
+        <p class="input-sub-title">/</p>
+        <a
+          href="https://hous3.io/tools/create-token"
+          target="_blank"
+        >
+          <p class="input-sub-title text-clickable text-center">Create Nft</p>
+        </a>
       </div>
     </div>
-    <!-- Candy machine guards -->
-    <div class="input-container">
-      <p class="main-input-title">Guards</p>
-      <div class="divider"></div>
+    <div class="divider"></div>
+    <div
+      *ngIf="!collectionNft"
+      class="collection-nft-container"
+    >
+      <div class="indicator-label yellow">
+        <span class="iconify indicator-label-icon" data-icon="material-symbols:error-outline-rounded"></span>
+        <span>Candy machine and collection Nft update authority must match</span>
+      </div>
+      <div class="input-wrapper">
+        <input
+          class="default-input"
+          type="text"
+          maxlength="58"
+          placeholder="Collection Nft address"
+          [(ngModel)]="collectionNftAddress"
+          [disabled]="!canValidateCollectionNft"
+        />
+        <p class="input-sub-title">
+          Minted Nfts will be grouped to this Nft to form an easily verifiable collection.
+        </p>
+      </div>
+      <button
+        class="button-primary validate-nft-button"
+        (click)="validateCollectionNft()"
+        [disabled]="!canValidateCollectionNft"
+      >
+        <span *ngIf="!isValidatingCollectionNft">
+          Validate
+        </span>
+        <mat-spinner
+          *ngIf="isValidatingCollectionNft"
+          [diameter]="20"
+        ></mat-spinner>
+      </button>
+    </div>
+    <div
+      *ngIf="collectionNft"
+      class="collection-nft-container"
+    >
+      <div class="collection-nft-display-container">
+        <div class="collection-nft-image-wrapper">
+          <img class="collection-nft-image" [src]=collectionNft.json?.image>
+        </div>
+        <div class="collection-nft-status-wrapper">
+          <p class="input-title">{{ collectionNft.name }}</p>
+          <div *ngIf="compareCollectionNftUpdateAuthority" class="indicator-label green">
+            <span class="iconify indicator-label-icon" data-icon="material-symbols:check-circle-outline-rounded"></span>
+            <span>Valid collection Nft</span>
+          </div>
+          <div *ngIf="!compareCollectionNftUpdateAuthority" class="indicator-label red">
+            <span class="iconify indicator-label-icon" data-icon="material-symbols:error-outline-rounded"></span>
+            <span>Update authorities do not match</span>
+          </div>
+          <button
+            class="button-secondary"
+            (click)="replaceCollectionNft()"
+            [disabled]="!canValidateCollectionNft"
+          >
+            Replace
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Candy machine item settings -->
+  <div class="section-wrapper">
+    <p class="main-input-title">Mint Type</p>
+    <div class="divider"></div>
+    <div class="item-settings-toggle-wrapper">
+      <div
+        class="item-settings-toggle-item"
+        [ngClass]="{ 'active-item-settings-toggle-item': !isItemSettingsHidden }"
+        (click)="setItemSettingsHidden(false)"
+      >
+        <span>Default</span>
+      </div>
+      <div
+        class="item-settings-toggle-item"
+        [ngClass]="{ 'active-item-settings-toggle-item': isItemSettingsHidden }"
+        (click)="setItemSettingsHidden(true)"
+      >
+        <span>Pre-reveal</span>
+      </div>
+    </div>
+    <div class="item-settings-container">
+      <div class="input-wrapper">
+        <p class="input-title">NFT Name</p>
+        <input
+          class="default-input"
+          type="text"
+          maxlength="29"
+          placeholder="{{ isItemSettingsHidden ? 'Pre-reveal ' : '' }}Nft name"
+          [(ngModel)]="nftName"
+        />
+        <p class="input-sub-title">
+          The base name that will be displayed for each
+          {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
+          Nft.
+        </p>
+      </div>
+      <div class="input-wrapper">
+        <p class="input-title">NFTs Indexed?</p>
+        <mat-slide-toggle
+          [(ngModel)]="isNftNameIndexed"
+        ></mat-slide-toggle>
+        <p class="input-sub-title">
+          Whether or not each
+          {{ isItemSettingsHidden ? 'pre-reveal' : '' }}
+          Nft name will be numbered.
+        </p>
+      </div>
+      <div
+        *ngIf="!isItemSettingsHidden"
+        class="input-wrapper"
+      >
+        <p class="input-title">Mint NFTs in order?</p>
+        <mat-slide-toggle
+          [(ngModel)]="isMintSequential"
+        ></mat-slide-toggle>
+        <p class="input-sub-title">Whether to mint Nfts in order or at random.</p>
+      </div>
     </div>
   </div>
   <button
