@@ -9,8 +9,17 @@ import {
 import { SnackService } from 'src/app/service/snack.service';
 import { WalletService } from 'src/app/service/wallet.service';
 import { MetaplexService } from 'src/app/service/metaplex.service';
-import { MetaplexError, token } from '@metaplex-foundation/js';
-import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import {
+  CreateNftInput,
+  CreateSftInput,
+  MetaplexError,
+  token
+} from '@metaplex-foundation/js';
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey
+} from '@solana/web3.js';
 
 @Component({
   selector: 'app-create-token',
@@ -28,12 +37,13 @@ export class CreateTokenComponent implements OnInit {
   tokenDescription: string = '';
   tokenSymbol: string = '';
   tokenUrl: string = '';
-  tokenSupply: number = 0;
+  tokenSupply: number;
   decimals: number = -1;
   keepMintAuthority: boolean = false;
   keepFreezeAuthority: boolean = false;
 
   isCreatingToken: boolean = false;
+  createdTokenMintAddress: PublicKey | null = null;
 
   constructor(
     private snackService: SnackService,
@@ -115,43 +125,25 @@ export class CreateTokenComponent implements OnInit {
             family: this.tokenName,
           }
         };
-        const sftInput = {
-          updateAuthority: this.mxService.getIdentity(),
-          mintAuthority: this.keepMintAuthority
-            ? this.mxService.getIdentity()
-            : Keypair.generate(),
-          freezeAuthority: this.keepFreezeAuthority
-            ? this.mxService.getIdentity().publicKey
-            : null,
-          useNewMint: Keypair.generate(),
-          useExistingMint: undefined, // Defaults to creating a new mint account
-          tokenOwner: this.mxService.getIdentity().publicKey,
-          tokenAddress: undefined, // Defaults to creating and/or minting a new token account
-          tokenAmount: token(this.tokenSupply, this.decimals, this.tokenSymbol),
-          decimals: this.decimals,
-          uri: '',
-          name: this.tokenName,
-          sellerFeeBasisPoints: 0,
-          symbol: this.tokenSymbol,
-          creators: undefined, // Defaults to update authority
-          isMutable: true,
-          uses: null, // No uses for this token
-          isCollection: false,
-          collection: null, // Belongs to no collection
-          collectionAuthority: null, // Belongs to no collection
-          collectionAuthorityIsDelegated: false, // Belongs to no collection
-          collectionIsSized: false // Can mint more later
-        };
 
-        const sft = await this.mxService.createSft(
-          sftInput,
-          offChainMetadata,
-          this.selectedImageFile
-        );
+        if (this.tokenSupply == 1 && this.decimals == 0) {
+          // Use NonFungible token standard
+          const createdToken = await this.mxService.createNft(
+            this.constructNftInput(),
+            offChainMetadata,
+            this.selectedImageFile
+          );
+          this.createdTokenMintAddress = createdToken.mintAddress;
+        } else {
+          const createdToken = await this.mxService.createSft(
+            this.constructSftInput(),
+            offChainMetadata,
+            this.selectedImageFile
+          );
+          this.createdTokenMintAddress = createdToken.mintAddress;
+        }
 
-        console.log(`Hardcoded mint address: ${sftInput.useNewMint.publicKey.toString()}`);
-        console.log(`SFT: ${sft}`);
-        console.log(`MINT ADDRESS: ${sft.mintAddress}`);
+        console.log(`Mint address: ${this.createdTokenMintAddress.toString()}`);
       }
       catch (err) {
         this.snackService.showError(
@@ -191,7 +183,11 @@ export class CreateTokenComponent implements OnInit {
       return false;
     }
 
-    if (this.tokenSupply < 1 || this.tokenSupply > LAMPORTS_PER_SOL) {
+    if (
+      !this.tokenSupply ||
+      this.tokenSupply < 1 ||
+      this.tokenSupply > LAMPORTS_PER_SOL
+    ) {
       this.snackService.showWarning('Please enter a valid supply between 1 - 1 billion');
       return false;
     }
@@ -211,6 +207,65 @@ export class CreateTokenComponent implements OnInit {
     }
 
     return true;
+  }
+
+  constructNftInput(): CreateNftInput {
+    return {
+      updateAuthority: this.mxService.getIdentity(),
+      mintAuthority: this.keepMintAuthority
+        ? this.mxService.getIdentity()
+        : Keypair.generate(),
+      freezeAuthority: this.keepFreezeAuthority
+        ? this.mxService.getIdentity()
+        : Keypair.generate(),
+      useNewMint: Keypair.generate(),
+      useExistingMint: undefined, // Defaults to creating a new mint account
+      tokenOwner: this.mxService.getIdentity().publicKey,
+      tokenAddress: undefined, // Defaults to creating and/or minting a new token account
+      uri: '',
+      name: this.tokenName,
+      sellerFeeBasisPoints: 0,
+      symbol: this.tokenSymbol,
+      creators: undefined, // Defaults to update authority
+      isMutable: true,
+      maxSupply: undefined, // Defaults to 0
+      uses: null,
+      isCollection: false,
+      collection: null, // Belongs to no collection
+      collectionAuthority: null, // Belongs to no collection
+      collectionAuthorityIsDelegated: false, // Belongs to no collection
+      collectionIsSized: false // Can mint more later
+    } as CreateNftInput;
+  }
+
+  constructSftInput(): CreateSftInput {
+    return {
+      updateAuthority: this.mxService.getIdentity(),
+      mintAuthority: this.keepMintAuthority
+        ? this.mxService.getIdentity()
+        : Keypair.generate(),
+      freezeAuthority: this.keepFreezeAuthority
+        ? this.mxService.getIdentity().publicKey
+        : null,
+      useNewMint: Keypair.generate(),
+      useExistingMint: undefined, // Defaults to creating a new mint account
+      tokenOwner: this.mxService.getIdentity().publicKey,
+      tokenAddress: undefined, // Defaults to creating and/or minting a new token account
+      tokenAmount: token(this.tokenSupply, this.decimals, this.tokenSymbol),
+      decimals: this.decimals,
+      uri: '',
+      name: this.tokenName,
+      sellerFeeBasisPoints: 0,
+      symbol: this.tokenSymbol,
+      creators: undefined, // Defaults to update authority
+      isMutable: true,
+      uses: null, // No uses for this token
+      isCollection: false,
+      collection: null, // Belongs to no collection
+      collectionAuthority: null, // Belongs to no collection
+      collectionAuthorityIsDelegated: false, // Belongs to no collection
+      collectionIsSized: false // Can mint more later
+    } as CreateSftInput;
   }
 
   validateUserConnection(): boolean {

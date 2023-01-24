@@ -13,7 +13,8 @@ import {
   JsonMetadata,
   UploadMetadataOutput,
   CreateSftInput,
-  CreateCandyMachineInput
+  CreateCandyMachineInput,
+  CreateNftInput
 } from '@metaplex-foundation/js';
 import { Connection, PublicKey, Signer } from '@solana/web3.js';
 import {
@@ -110,6 +111,22 @@ export class MetaplexService {
       },
       options
     );
+  }
+
+  async createNft(nftInput: CreateNftInput, offChainMetadata: JsonMetadata, file: File) {
+    const nftMetadata = await this.uploadNftMetadata(offChainMetadata, file);
+    nftInput.uri = nftMetadata.uri;
+
+    const abortController: AbortController = new AbortController();
+    setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);
+
+    const options: OperationOptions = {
+      payer: this.getIdentity(),
+      commitment: 'confirmed',
+      signal: abortController.signal
+    };
+
+    return this.metaplex.nfts().create(nftInput, options);
   }
 
   async createSft(sftInput: CreateSftInput, offChainMetadata: JsonMetadata, file: File) {
