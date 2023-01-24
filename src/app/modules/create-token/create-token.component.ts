@@ -10,6 +10,7 @@ import { SnackService } from 'src/app/service/snack.service';
 import { WalletService } from 'src/app/service/wallet.service';
 import { MetaplexService } from 'src/app/service/metaplex.service';
 import {
+  AccountNotFoundError,
   CreateNftInput,
   CreateSftInput,
   MetaplexError,
@@ -146,9 +147,16 @@ export class CreateTokenComponent implements OnInit {
         console.log(`Mint address: ${this.createdTokenMintAddress.toString()}`);
       }
       catch (err) {
-        this.snackService.showError(
-          `${(err instanceof MetaplexError) ? err.message : err}`
-        );
+        if (err instanceof AccountNotFoundError) {
+          this.snackService.showWarning(
+            'RPC error - we are unsure if your token has been created or not.\
+            Refresh and check your wallet to verify'
+          );
+        } else {
+          this.snackService.showError(
+            `${(err instanceof MetaplexError) ? err.message : err}`
+          );
+        }
         console.log(`err: ${err}`);
       }
 
@@ -273,7 +281,14 @@ export class CreateTokenComponent implements OnInit {
     if (this.walletAdapter?.connected && this.walletAdapter?.publicKey) {
       if (this.rpcEndpoint) {
         // Validate rpcEndpoint and wallet matches metaplex instance
-        return this.mxService.validateInstance(this.rpcEndpoint, this.walletAdapter);
+        if (this.mxService.validateInstance(this.rpcEndpoint, this.walletAdapter)) {
+          return true;
+        } else {
+          this.snackService.showError(
+            'Error connecting to network, please disconnect, reload and try again'
+          );
+          return false;
+        }
       } else {
         this.snackService.showError('Rpc error, please reload and try again');
         return false;

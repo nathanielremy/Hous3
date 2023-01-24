@@ -38,7 +38,7 @@
               </p>
             </div>
             <p class="input-sub-title">
-              Jpg, png & gif only<br>Max size: 10MB
+              Jpg, png & gif only<br>Max size: 10Mb
             </p>
           </div>
           <button
@@ -111,6 +111,20 @@
             [(ngModel)]="tokenUrl"
           />
           <p class="input-sub-title">The url that will be displayed for this token.</p>
+        </div>
+
+        <div class="indicator-label white">
+          <span class="iconify indicator-label-icon" data-icon="uil:info-circle"></span>
+          <span>
+            To create a token using the NonFungible token standard (Nft),
+            set supply: 1 & decimals: 0
+            <a
+              href="https://docs.metaplex.com/programs/token-metadata/token-standard"
+              target="_blank"
+            >
+              <span class="white text-clickable">Learn more</span>
+            </a>
+          </span>
         </div>
 
         <div class="input-wrapper">
