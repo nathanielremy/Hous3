@@ -25,3 +25,4 @@ export const FILE_TYPE_PNG: string = 'image/png';
 export const FILE_TYPE_JPG: string = 'image/jpg';
 export const FILE_TYPE_JPEG: string = 'image/jpeg';
 export const FILE_TYPE_GIF: string = 'image/gif';
+export const FILE_TYPE_JSON: string = 'application/json';

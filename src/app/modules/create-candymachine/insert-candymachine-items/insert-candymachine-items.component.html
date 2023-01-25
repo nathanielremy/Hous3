@@ -1,1 +1,53 @@
-<p class="white">insert-candymachine-items works!</p>
+<div class="component-container">
+  <div *ngIf="!candyMachine" class="not-found-wrapper">
+    <p class="section-title text-center grey">Candy machine not found</p>
+  </div>
+  <div *ngIf="candyMachine" class="cm-content-container">
+    <div
+      class="drag-drop-zone cursor-pointer"
+      dropzone
+      (hovered)="toogleImagesDragged($event)"
+      (dropped)="onJsonFilesDropped($event)"
+      (click)="openFileSelector(jsonFilesSelector)"
+    >
+      <p class="drag-drop-label">Add json file(s): {{ jsonFilesCount }}</p>
+    </div>
+    <div
+      class="drag-drop-zone cursor-pointer"
+      dropzone
+      (hovered)="toogleJsonsDragged($event)"
+      (dropped)="onImageFilesDropped($event)"
+      (click)="openFileSelector(imageFilesSelector)"
+    >
+      <p class="drag-drop-label">Add image file(s): {{ imageFilesCount }}</p>
+    </div>
+    <div class="previews-wrapper">
+      <img
+        class="image-preview"
+        *ngFor="let preview of imagePreviews; let i = index"
+        [src]="preview"
+      />
+    </div>
+
+    <div class="w-full flex justify-center items-center">
+      <button class="button-primary" (click)="addAssers()">Add Asset(s)</button>
+    </div>
+  </div>
+</div>
+
+<input
+  #imageFilesSelector
+  type="file"
+  accept="image/jpg,image/jpeg,image/png,image/gif"
+  class="fileInput"
+  [multiple]="isMultipleFiles"
+  (change)="onImageFilesSelected($event)"
+/>
+<input
+  #jsonFilesSelector
+  type="file"
+  accept="application/json"
+  class="fileInput"
+  [multiple]="isMultipleFiles"
+  (change)="onJsonFilesSelected($event)"
+/>
