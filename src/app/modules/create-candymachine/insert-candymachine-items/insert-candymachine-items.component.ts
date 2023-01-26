@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CandyMachine } from '@metaplex-foundation/js';
+import { CandyMachine, UploadMetadataInput } from '@metaplex-foundation/js';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import {
   FILE_TYPE_GIF,
   FILE_TYPE_JPEG,
@@ -7,6 +8,7 @@ import {
   FILE_TYPE_JSON,
   FILE_TYPE_PNG,
 } from 'src/app/common/constants';
+import { checkJSONObjectIsValidMetadata } from 'src/app/common/utils/utils';
 import { SnackService } from 'src/app/service/snack.service';
 
 @Component({
@@ -21,14 +23,35 @@ export class InsertCandymachineItemsComponent implements OnInit {
   isUploadingAssets: boolean = false;
   isImagesDragged: boolean = false;
   isJsonsDragged: boolean = false;
+  isJsonInvalid: boolean = false;
   imageFiles: Array<File> = [];
   imagePreviews: Array<string> = [];
   jsonFiles: Array<File> = [];
-  jsonPreviews: Array<string> = [];
+  jsonPreviews: Array<UploadMetadataInput> = [];
 
-  constructor(private snackService: SnackService) {}
+  invalidJsonSubject: BehaviorSubject<boolean>;
+  private invalidJsonSubscription: Subscription;
+
+  constructor(private snackService: SnackService) {
+    this.invalidJsonSubject = new BehaviorSubject<boolean>(false);
+
+    this.invalidJsonSubscription = this.invalidJsonSubject.subscribe(
+      (invalidJsonAppeared) => {
+        if (invalidJsonAppeared) {
+          this.snackService.showError('Invalid metadata format in .json file.');
+          this.jsonFiles = [];
+          this.jsonPreviews = [];
+          this.isJsonInvalid = true;
+        }
+      }
+    );
+  }
 
   ngOnInit(): void {}
+
+  ngOnDestroy() {
+    this.invalidJsonSubscription.unsubscribe();
+  }
 
   onImageFilesSelected(e: any) {
     const element = e.currentTarget as HTMLInputElement;
@@ -62,14 +85,23 @@ export class InsertCandymachineItemsComponent implements OnInit {
   }
 
   prepareJsonFiles(fileList: FileList) {
+    this.isJsonInvalid = false;
     for (let i = 0; i < fileList.length; i++) {
+      if (this.isJsonInvalid) return;
       const file = fileList.item(i);
       if (file) {
         const reader = new FileReader();
         reader.onload = () => {
           const jsonBody = reader.result as string;
           this.jsonFiles.push(file);
-          this.jsonPreviews.push(jsonBody);
+          const jsonObject = checkJSONObjectIsValidMetadata(
+            JSON.parse(jsonBody)
+          );
+          if (jsonObject) {
+            this.jsonPreviews.push(jsonObject);
+          } else {
+            this.invalidJsonSubject.next(true);
+          }
         };
         reader.readAsText(file);
       }
@@ -99,6 +131,11 @@ export class InsertCandymachineItemsComponent implements OnInit {
           this.snackService.showError(
             'Only .gif, .png & .jpg files are accepted'
           );
+          return;
+        }
+
+        if (file.size > 10000000) {
+          this.snackService.showError('Your file is too large. Max 10mb');
           return;
         }
       }
