@@ -162,8 +162,10 @@ export class InsertCandymachineItemsComponent implements OnInit {
             JSON.parse(jsonBody)
           );
           if (jsonObject) {
-            this.jsonFiles.push(file);
-            this.jsonPreviews.push(jsonObject);
+            if (!isJsonInvalidMetadata) {
+              this.jsonFiles.push(file);
+              this.jsonPreviews.push(jsonObject);
+            }
           } else {
             isJsonInvalidMetadata = true;
             this.jsonFiles = [];
