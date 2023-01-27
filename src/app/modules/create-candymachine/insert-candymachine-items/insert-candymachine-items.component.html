@@ -21,7 +21,7 @@
     >
       <p class="drag-drop-label">Add image file(s): {{ imageFilesCount }}</p>
     </div>
-    <div class="previews-wrapper">
+    <div class="previews-wrapper" *ngIf="imagePreviews.length > 0">
       <img
         class="image-preview"
         *ngFor="let preview of imagePreviews; let i = index"

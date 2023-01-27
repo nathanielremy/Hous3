@@ -146,7 +146,7 @@ export const checkJSONObjectIsValidMetadata = (object: any) => {
   if (!object.symbol || typeof object.symbol != 'string') {
     return null;
   }
-  if (!object.description || typeof object.description != 'string') {
+  if (object.description && typeof object.description != 'string') {
     return null;
   }
   if (

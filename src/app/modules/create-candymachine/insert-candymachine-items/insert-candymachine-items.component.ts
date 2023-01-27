@@ -23,36 +23,18 @@ export class InsertCandymachineItemsComponent implements OnInit {
   isUploadingAssets: boolean = false;
   isImagesDragged: boolean = false;
   isJsonsDragged: boolean = false;
-  isJsonInvalid: boolean = false;
   imageFiles: Array<File> = [];
   imagePreviews: Array<string> = [];
   jsonFiles: Array<File> = [];
   jsonPreviews: Array<UploadMetadataInput> = [];
 
-  invalidJsonSubject: BehaviorSubject<boolean>;
-  private invalidJsonSubscription: Subscription;
-
-  constructor(private snackService: SnackService) {
-    this.invalidJsonSubject = new BehaviorSubject<boolean>(false);
-
-    this.invalidJsonSubscription = this.invalidJsonSubject.subscribe(
-      (invalidJsonAppeared) => {
-        if (invalidJsonAppeared) {
-          this.snackService.showError('Invalid metadata format in .json file.');
-          this.jsonFiles = [];
-          this.jsonPreviews = [];
-          this.isJsonInvalid = true;
-        }
-      }
-    );
-  }
+  constructor(private snackService: SnackService) {}
 
   ngOnInit(): void {}
 
-  ngOnDestroy() {
-    this.invalidJsonSubscription.unsubscribe();
-  }
-
+  /*************************************************************************************/
+  /******************************** Event handlers *************************************/
+  /*************************************************************************************/
   onImageFilesSelected(e: any) {
     const element = e.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
@@ -69,43 +51,12 @@ export class InsertCandymachineItemsComponent implements OnInit {
     }
   }
 
-  prepareImageFiles(fileList: FileList) {
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList.item(i);
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const preview = reader.result as string;
-          this.imageFiles.push(file);
-          this.imagePreviews.push(preview);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+  onImageFilesDropped(droppedFiles: FileList) {
+    this.prepareImageFiles(droppedFiles);
   }
 
-  prepareJsonFiles(fileList: FileList) {
-    this.isJsonInvalid = false;
-    for (let i = 0; i < fileList.length; i++) {
-      if (this.isJsonInvalid) return;
-      const file = fileList.item(i);
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const jsonBody = reader.result as string;
-          this.jsonFiles.push(file);
-          const jsonObject = checkJSONObjectIsValidMetadata(
-            JSON.parse(jsonBody)
-          );
-          if (jsonObject) {
-            this.jsonPreviews.push(jsonObject);
-          } else {
-            this.invalidJsonSubject.next(true);
-          }
-        };
-        reader.readAsText(file);
-      }
-    }
+  onJsonFilesDropped(droppedFiles: FileList) {
+    this.prepareJsonFiles(droppedFiles);
   }
 
   toogleImagesDragged(event: boolean) {
@@ -116,9 +67,18 @@ export class InsertCandymachineItemsComponent implements OnInit {
     this.isJsonsDragged = event;
   }
 
-  onImageFilesDropped(droppedFiles: FileList) {
-    for (let i = 0; i < droppedFiles.length; i++) {
-      const file = droppedFiles.item(i);
+  openFileSelector(fileSelector: HTMLInputElement) {
+    if (this.isUploadingAssets) return;
+    fileSelector.value = fileSelector.defaultValue;
+    fileSelector.click();
+  }
+
+  /*************************************************************************************/
+  /****************************** Utility functions ************************************/
+  /*************************************************************************************/
+  checkImageFilesValidation(files: FileList) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
       if (file) {
         if (
           !(
@@ -131,37 +91,98 @@ export class InsertCandymachineItemsComponent implements OnInit {
           this.snackService.showError(
             'Only .gif, .png & .jpg files are accepted'
           );
-          return;
+          return false;
         }
 
         if (file.size > 10000000) {
           this.snackService.showError('Your file is too large. Max 10mb');
-          return;
+          return false;
         }
       }
     }
-    this.prepareImageFiles(droppedFiles);
+    return true;
   }
 
-  onJsonFilesDropped(droppedFiles: FileList) {
-    for (let i = 0; i < droppedFiles.length; i++) {
-      const file = droppedFiles.item(i);
+  checkJsonFilesValidation(files: FileList) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
       if (file) {
         if (file.type !== FILE_TYPE_JSON) {
           this.snackService.showError('Only .json files are accepted');
-          return;
+          return false;
+        }
+
+        if (file.size > 1000000) {
+          this.snackService.showError('Your file is too large. Max 1mb');
+          return false;
         }
       }
     }
-    this.prepareJsonFiles(droppedFiles);
+    return true;
   }
 
-  openFileSelector(fileSelector: HTMLInputElement) {
-    if (this.isUploadingAssets) return;
-    fileSelector.value = fileSelector.defaultValue;
-    fileSelector.click();
+  prepareImageFiles(fileList: FileList) {
+    if (!this.checkImageFilesValidation(fileList)) return;
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList.item(i);
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const preview = reader.result as string;
+          if (this.imagePreviews.includes(preview)) {
+            this.snackService.showWarning('Image file is duplicated.');
+          } else {
+            this.imageFiles.push(file);
+            this.imagePreviews.push(preview);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
   }
 
+  prepareJsonFiles(fileList: FileList) {
+    if (!this.checkJsonFilesValidation(fileList)) return;
+
+    let isJsonInvalidMetadata = false;
+    for (let i = 0; i < fileList.length; i++) {
+      if (isJsonInvalidMetadata) {
+        this.jsonFiles = [];
+        this.jsonPreviews = [];
+        this.snackService.showError('Invalid metadata format in .json file.');
+        return;
+      }
+      const file = fileList.item(i);
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const jsonBody = reader.result as string;
+          const jsonObject = checkJSONObjectIsValidMetadata(
+            JSON.parse(jsonBody)
+          );
+          if (jsonObject) {
+            this.jsonFiles.push(file);
+            this.jsonPreviews.push(jsonObject);
+          } else {
+            isJsonInvalidMetadata = true;
+            this.jsonFiles = [];
+            this.jsonPreviews = [];
+            this.snackService.showError(
+              'Invalid metadata format in .json file.'
+            );
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+  }
+
+  async addAssers() {}
+
+  /*************************************************************************************/
+  /************************************ Getters ****************************************/
+  /*************************************************************************************/
   get isMultipleFiles() {
     return this.candyMachine?.itemSettings.type == 'configLines';
   }
@@ -173,6 +194,4 @@ export class InsertCandymachineItemsComponent implements OnInit {
   get jsonFilesCount() {
     return this.jsonFiles.length;
   }
-
-  async addAssers() {}
 }
