@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CandyMachine, UploadMetadataInput } from '@metaplex-foundation/js';
-import { BehaviorSubject, Subscription } from 'rxjs';
 import {
   FILE_TYPE_GIF,
   FILE_TYPE_JPEG,
@@ -27,6 +26,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
   imagePreviews: Array<string> = [];
   jsonFiles: Array<File> = [];
   jsonPreviews: Array<UploadMetadataInput> = [];
+  assets: Map<UploadMetadataInput, File> = new Map();
 
   constructor(private snackService: SnackService) {}
 
@@ -180,7 +180,32 @@ export class InsertCandymachineItemsComponent implements OnInit {
     }
   }
 
-  async addAssers() {}
+  prepareAssets() {
+    this.assets.clear();
+
+    if (this.jsonPreviews.length != this.imageFiles.length) {
+      this.snackService.showError('Image and JSON files are not match.');
+      return false;
+    }
+    for (let metadata of this.jsonPreviews) {
+      const fileName = metadata.image;
+      const imageFile = this.imageFiles.find((file) => {
+        return file.name == fileName;
+      });
+      if (imageFile) {
+        this.assets.set(metadata, imageFile);
+      } else {
+        this.assets.clear();
+        this.snackService.showError('Not able to find image file.');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  async addAssers() {
+    if (!this.prepareAssets()) return;
+  }
 
   /*************************************************************************************/
   /************************************ Getters ****************************************/
