@@ -1,4 +1,4 @@
-.createTokenBody {
+.create-token-body {
   background-color: #020a03;
 }
 
@@ -30,6 +30,7 @@
   width: min(600px, 100%);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 24px;
   margin: 0px;
   padding: 24px;
@@ -155,6 +156,31 @@
   color: #1a1b1e !important;
 }
 
+.indicator-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 12px 18px;
+  background: #1a1b1e;
+  border-radius: 40px;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+}
+
+.indicator-label-icon {
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
+}
+
 .bottom-cta-container {
   min-width: 100%;
   max-width: 100%;
@@ -163,12 +189,74 @@
   justify-content: center;
   align-items: center;
   margin: 0px;
-  padding: 24px 0px 88px 0px;
+  padding: 24px 0px;
 }
 
 .bottom-cta-container button {
   min-width: 100%;
   max-width: 100%;
+}
+
+.success-icon {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+}
+
+.copy-address-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0px;
+  padding: 8px 16px;
+  border-radius: 7px;
+  border: 1px solid #303235;
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.copy-address-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+.copy-address-icon {
+  min-width: 20px;
+  max-width: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  object-fit: contain;
+  color: #525355;
+  transition: 0.5s all;
+  cursor: pointer;
+}
+
+.copy-address-icon:hover,
+.copy-address-icon:active  {
+  color: #f8f8f8;
+}
+
+.success-buttons-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0px;
+  padding: 0px 0px 24px 0px;
+}
+
+a {
+  text-decoration: none;
 }
 
 .fileInput {
