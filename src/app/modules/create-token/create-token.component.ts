@@ -47,7 +47,7 @@ export class CreateTokenComponent implements OnInit {
   keepFreezeAuthority: boolean = false;
 
   isCreatingToken: boolean = false;
-  createdTokenMintAddress: PublicKey | null = new PublicKey('BSJmhoPdyW2yBQAMzqGhJmfp3PwD2ceG6rfZ1johJczG');
+  createdTokenMintAddress: PublicKey | null = null;
 
   constructor(
     private snackService: SnackService,
@@ -157,8 +157,6 @@ export class CreateTokenComponent implements OnInit {
           );
           this.createdTokenMintAddress = createdToken.mintAddress;
         }
-
-        console.log(`Mint address: ${this.createdTokenMintAddress.toString()}`);
       }
       catch (err) {
         if (err instanceof AccountNotFoundError) {
@@ -322,6 +320,16 @@ export class CreateTokenComponent implements OnInit {
   }
 
   createNewToken() {
-    this.snackService.showSnackBar('Create new token');
+    this.selectedImageFile = null;
+    this.selectedImageUrl = null;
+    this.tokenName = '';
+    this.tokenDescription = '';
+    this.tokenSymbol = '';
+    this.tokenUrl = '';
+    this.tokenSupply = NaN;
+    this.decimals = -1;
+    this.keepMintAuthority = false;
+    this.keepFreezeAuthority = false;
+    this.createdTokenMintAddress = null;
   }
 }
