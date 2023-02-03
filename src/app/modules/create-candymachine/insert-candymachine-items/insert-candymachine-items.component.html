@@ -30,7 +30,10 @@
     </div>
 
     <div class="w-full flex justify-center items-center">
-      <button class="button-primary" (click)="addAssers()">Add Asset(s)</button>
+      <button class="button-primary" (click)="addAssets()">
+        <span *ngIf="!isUploadingAssets"> Add Asset(s) </span>
+        <mat-spinner *ngIf="isUploadingAssets" [diameter]="20"></mat-spinner>
+      </button>
     </div>
   </div>
 </div>

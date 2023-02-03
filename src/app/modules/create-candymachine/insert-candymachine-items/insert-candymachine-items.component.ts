@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CandyMachine, UploadMetadataInput } from '@metaplex-foundation/js';
+import {
+  CandyMachine,
+  CandyMachineV2Item,
+  UploadMetadataInput,
+} from '@metaplex-foundation/js';
 import {
   FILE_TYPE_GIF,
   FILE_TYPE_JPEG,
@@ -8,6 +12,7 @@ import {
   FILE_TYPE_PNG,
 } from 'src/app/common/constants';
 import { checkJSONObjectIsValidMetadata } from 'src/app/common/utils/utils';
+import { MetaplexService } from 'src/app/service/metaplex.service';
 import { SnackService } from 'src/app/service/snack.service';
 
 @Component({
@@ -28,7 +33,10 @@ export class InsertCandymachineItemsComponent implements OnInit {
   jsonPreviews: Array<UploadMetadataInput> = [];
   assets: Map<UploadMetadataInput, File> = new Map();
 
-  constructor(private snackService: SnackService) {}
+  constructor(
+    private snackService: SnackService,
+    private mxService: MetaplexService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -36,6 +44,8 @@ export class InsertCandymachineItemsComponent implements OnInit {
   /******************************** Event handlers *************************************/
   /*************************************************************************************/
   onImageFilesSelected(e: any) {
+    if (this.isUploadingAssets) return;
+
     const element = e.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
     if (fileList) {
@@ -44,6 +54,8 @@ export class InsertCandymachineItemsComponent implements OnInit {
   }
 
   onJsonFilesSelected(e: any) {
+    if (this.isUploadingAssets) return;
+
     const element = e.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
     if (fileList) {
@@ -52,23 +64,32 @@ export class InsertCandymachineItemsComponent implements OnInit {
   }
 
   onImageFilesDropped(droppedFiles: FileList) {
+    if (this.isUploadingAssets) return;
+
     this.prepareImageFiles(droppedFiles);
   }
 
   onJsonFilesDropped(droppedFiles: FileList) {
+    if (this.isUploadingAssets) return;
+
     this.prepareJsonFiles(droppedFiles);
   }
 
   toogleImagesDragged(event: boolean) {
+    if (this.isUploadingAssets) return;
+
     this.isImagesDragged = event;
   }
 
   toogleJsonsDragged(event: boolean) {
+    if (this.isUploadingAssets) return;
+
     this.isJsonsDragged = event;
   }
 
   openFileSelector(fileSelector: HTMLInputElement) {
     if (this.isUploadingAssets) return;
+
     fileSelector.value = fileSelector.defaultValue;
     fileSelector.click();
   }
@@ -203,8 +224,41 @@ export class InsertCandymachineItemsComponent implements OnInit {
     return true;
   }
 
-  async addAssers() {
+  async addAssets() {
+    if (this.isUploadingAssets) return;
+    if (!this.candyMachine) return;
     if (!this.prepareAssets()) return;
+
+    this.isUploadingAssets = true;
+    const items: Array<CandyMachineV2Item> = [];
+    for (const [metadata, imageFile] of this.assets) {
+      const uploadedMetadata = await this.mxService.uploadNftMetadata(
+        metadata,
+        imageFile
+      );
+      if (uploadedMetadata) {
+        items.push({
+          name: uploadedMetadata.metadata.name!,
+          uri: uploadedMetadata.uri,
+        });
+      } else {
+        this.snackService.showError(
+          'Not able to upload NFT metadata. Please try again.'
+        );
+        this.isUploadingAssets = false;
+        return;
+      }
+    }
+    if (items.length != this.assets.size) {
+      this.snackService.showError(
+        'Failed to upload NFT metadata. Please try again.'
+      );
+      this.isUploadingAssets = false;
+      return;
+    }
+
+    await this.mxService.insertCandyMachineItems(this.candyMachine, items);
+    this.isUploadingAssets = false;
   }
 
   /*************************************************************************************/
