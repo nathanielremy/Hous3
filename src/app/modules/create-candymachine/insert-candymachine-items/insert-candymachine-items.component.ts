@@ -4,6 +4,7 @@ import {
   CandyMachineV2Item,
   UploadMetadataInput,
 } from '@metaplex-foundation/js';
+import { PublicKey } from '@solana/web3.js';
 import {
   FILE_TYPE_GIF,
   FILE_TYPE_JPEG,
@@ -201,6 +202,18 @@ export class InsertCandymachineItemsComponent implements OnInit {
     }
   }
 
+  async getCandyMachine(candyMachineAddress: PublicKey) {
+    try {
+      const candyMachine = await this.mxService.getCandyMachine(
+        candyMachineAddress
+      );
+      return candyMachine;
+    } catch (err) {
+      console.log(`Error fetching cm ${err}`);
+    }
+    return null;
+  }
+
   prepareAssets() {
     this.assets.clear();
 
@@ -258,7 +271,17 @@ export class InsertCandymachineItemsComponent implements OnInit {
     }
 
     await this.mxService.insertCandyMachineItems(this.candyMachine, items);
+    this.candyMachine = await this.getCandyMachine(this.candyMachine.address);
     this.isUploadingAssets = false;
+
+    if (!this.candyMachine) {
+      this.snackService.showError(
+        'Failed to fetch updated CandyMachine. Please try again.'
+      );
+      return;
+    }
+
+    this.candyMachineEmitter.emit(this.candyMachine);
   }
 
   /*************************************************************************************/
