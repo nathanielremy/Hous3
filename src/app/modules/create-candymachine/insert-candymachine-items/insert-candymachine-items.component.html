@@ -3,10 +3,7 @@
     <p class="section-title text-center grey">Candy machine not found</p>
   </div>
   <div *ngIf="candyMachine" class="cm-content-container">
-    <div
-      *ngIf="isUploadingAssets"
-      class="progressWrapper"
-    >
+    <div *ngIf="isUploadingAssets" class="progressWrapper">
       <app-progress-bar [progress]="uploadingProgress"></app-progress-bar>
     </div>
     <div

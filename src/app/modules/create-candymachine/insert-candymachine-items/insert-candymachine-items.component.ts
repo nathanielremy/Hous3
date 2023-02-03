@@ -249,7 +249,6 @@ export class InsertCandymachineItemsComponent implements OnInit {
 
     if (this.isMultipleFiles) {
       // Insert CandyMachine's items
-
       let index = 0;
       const items: Array<CandyMachineV2Item> = [];
       for (const [metadata, imageFile] of this.assets) {
@@ -273,6 +272,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
         this.uploadingProgress = 60 * (index / this.assets.size);
         index++;
       }
+
       if (items.length != this.assets.size) {
         this.snackService.showError(
           'Failed to upload NFT metadata. Please try again.'
@@ -302,7 +302,6 @@ export class InsertCandymachineItemsComponent implements OnInit {
               1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
             ],
           } as CandyMachineHiddenSettings;
-
           const result = await this.mxService.updateCandyMachine(
             this.candyMachine,
             { itemSettings }
