@@ -4,7 +4,8 @@ import {
   FILE_TYPE_GIF,
   FILE_TYPE_JPEG,
   FILE_TYPE_JPG,
-  FILE_TYPE_PNG
+  FILE_TYPE_PNG,
+  RPC_URL_DEVNET
 } from 'src/app/common/constants';
 import { SnackService } from 'src/app/service/snack.service';
 import { WalletService } from 'src/app/service/wallet.service';
@@ -21,6 +22,8 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey
 } from '@solana/web3.js';
+import { truncateAddress } from 'src/app/common/utils/utils';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-create-token',
@@ -44,13 +47,24 @@ export class CreateTokenComponent implements OnInit {
   keepFreezeAuthority: boolean = false;
 
   isCreatingToken: boolean = false;
-  createdTokenMintAddress: PublicKey | null = null;
+  createdTokenMintAddress: PublicKey | null = new PublicKey('BSJmhoPdyW2yBQAMzqGhJmfp3PwD2ceG6rfZ1johJczG');
 
   constructor(
     private snackService: SnackService,
     private walletService: WalletService,
-    private mxService: MetaplexService
+    private mxService: MetaplexService,
+    private clipboard: Clipboard
   ) { }
+
+  get truncatedTokenMintAddress(): string {
+    return truncateAddress(this.createdTokenMintAddress?.toString());
+  }
+
+  get solscanUrl(): string {
+    return `https://solscan.io/token/${this.createdTokenMintAddress?.toString() ?? ''}${
+      this.rpcEndpoint == RPC_URL_DEVNET ? '?cluster=devnet' : ''
+    }`;
+  }
 
   ngOnInit(): void {
     this.walletService.walletStore$.wallet$.subscribe(
@@ -297,5 +311,17 @@ export class CreateTokenComponent implements OnInit {
       this.snackService.showError('Wallet not connected');
       return false;
     }
+  }
+
+  copyTokenAddress() {
+    if (this.createdTokenMintAddress) {
+      if (this.clipboard.copy(this.createdTokenMintAddress.toString())) {
+        this.snackService.showSuccess('copied');
+      }
+    }
+  }
+
+  createNewToken() {
+    this.snackService.showSnackBar('Create new token');
   }
 }
