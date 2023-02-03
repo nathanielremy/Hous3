@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   CandyMachine,
+  CandyMachineHiddenSettings,
   CandyMachineV2Item,
   UploadMetadataInput,
 } from '@metaplex-foundation/js';
@@ -26,6 +27,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
   @Output() candyMachineEmitter = new EventEmitter<CandyMachine>();
 
   isUploadingAssets: boolean = false;
+  uploadingProgress: number = 0;
   isImagesDragged: boolean = false;
   isJsonsDragged: boolean = false;
   imageFiles: Array<File> = [];
@@ -243,35 +245,92 @@ export class InsertCandymachineItemsComponent implements OnInit {
     if (!this.prepareAssets()) return;
 
     this.isUploadingAssets = true;
-    const items: Array<CandyMachineV2Item> = [];
-    for (const [metadata, imageFile] of this.assets) {
-      const uploadedMetadata = await this.mxService.uploadNftMetadata(
-        metadata,
-        imageFile
-      );
-      if (uploadedMetadata) {
-        items.push({
-          name: uploadedMetadata.metadata.name!,
-          uri: uploadedMetadata.uri,
-        });
-      } else {
+    this.uploadingProgress = 0;
+
+    if (this.isMultipleFiles) {
+      // Insert CandyMachine's items
+
+      let index = 0;
+      const items: Array<CandyMachineV2Item> = [];
+      for (const [metadata, imageFile] of this.assets) {
+        const uploadedMetadata = await this.mxService.uploadNftMetadata(
+          metadata,
+          imageFile
+        );
+        if (uploadedMetadata) {
+          items.push({
+            name: uploadedMetadata.metadata.name!,
+            uri: uploadedMetadata.uri,
+          });
+        } else {
+          this.snackService.showError(
+            'Not able to upload NFT metadata. Please try again.'
+          );
+          this.isUploadingAssets = false;
+          return;
+        }
+
+        this.uploadingProgress = 60 * (index / this.assets.size);
+        index++;
+      }
+      if (items.length != this.assets.size) {
         this.snackService.showError(
-          'Not able to upload NFT metadata. Please try again.'
+          'Failed to upload NFT metadata. Please try again.'
         );
         this.isUploadingAssets = false;
         return;
       }
-    }
-    if (items.length != this.assets.size) {
-      this.snackService.showError(
-        'Failed to upload NFT metadata. Please try again.'
-      );
-      this.isUploadingAssets = false;
-      return;
+
+      await this.mxService.insertCandyMachineItems(this.candyMachine, items);
+      this.uploadingProgress = 90;
+    } else {
+      // Update CandyMachine's mint setting
+      for (const [metadata, imageFile] of this.assets) {
+        const uploadedMetadata = await this.mxService.uploadNftMetadata(
+          metadata,
+          imageFile
+        );
+        if (uploadedMetadata) {
+          this.uploadingProgress = 60;
+
+          const itemSettings = {
+            type: 'hidden',
+            name: uploadedMetadata.metadata.name!,
+            uri: uploadedMetadata.uri,
+            hash: [
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            ],
+          } as CandyMachineHiddenSettings;
+
+          const result = await this.mxService.updateCandyMachine(
+            this.candyMachine,
+            { itemSettings }
+          );
+          if (result) {
+            this.uploadingProgress = 90;
+          } else {
+            this.snackService.showError(
+              'Failed to update CandyMachine settings. Please try again.'
+            );
+            this.isUploadingAssets = false;
+            return;
+          }
+        } else {
+          this.snackService.showError(
+            'Not able to upload NFT metadata. Please try again.'
+          );
+          this.isUploadingAssets = false;
+          return;
+        }
+
+        // Only one item is treated
+        break;
+      }
     }
 
-    await this.mxService.insertCandyMachineItems(this.candyMachine, items);
     this.candyMachine = await this.getCandyMachine(this.candyMachine.address);
+    this.uploadingProgress = 100;
     this.isUploadingAssets = false;
 
     if (!this.candyMachine) {

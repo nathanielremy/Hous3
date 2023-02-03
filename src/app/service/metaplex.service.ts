@@ -157,6 +157,20 @@ export class MetaplexService {
     return this.metaplex.candyMachines().create(candyMachineSettings, options);
   }
 
+  updateCandyMachine(candyMachine: CandyMachine, data: any) {
+    return new Promise<boolean>((resolve, _) => {
+      this.metaplex
+        .candyMachines()
+        .update({ candyMachine, ...data })
+        .then((_) => {
+          resolve(true);
+        })
+        .catch((_) => {
+          resolve(false);
+        });
+    });
+  }
+
   getNft(address: PublicKey, fullyLoaded: boolean) {
     const abortController: AbortController = new AbortController();
     setTimeout(() => abortController.abort(), METAPLEX_ABORT_TIMEOUT);

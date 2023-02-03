@@ -4,6 +4,12 @@
   </div>
   <div *ngIf="candyMachine" class="cm-content-container">
     <div
+      *ngIf="isUploadingAssets"
+      class="progressWrapper"
+    >
+      <app-progress-bar [progress]="uploadingProgress"></app-progress-bar>
+    </div>
+    <div
       class="drag-drop-zone cursor-pointer"
       dropzone
       (hovered)="toogleImagesDragged($event)"
