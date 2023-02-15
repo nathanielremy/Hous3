@@ -5,6 +5,7 @@ import {
   CandyMachineV2Item,
   UploadMetadataInput,
 } from '@metaplex-foundation/js';
+import { Adapter } from '@solana/wallet-adapter-base';
 import { PublicKey } from '@solana/web3.js';
 import {
   FILE_TYPE_GIF,
@@ -14,6 +15,7 @@ import {
   FILE_TYPE_PNG,
 } from 'src/app/common/constants';
 import { checkJSONObjectIsValidMetadata } from 'src/app/common/utils/utils';
+import { WalletService } from 'src/app/service/wallet.service';
 import { MetaplexService } from 'src/app/service/metaplex.service';
 import { SnackService } from 'src/app/service/snack.service';
 
@@ -26,6 +28,9 @@ export class InsertCandymachineItemsComponent implements OnInit {
   @Input() candyMachine: CandyMachine | null = null;
   @Output() candyMachineEmitter = new EventEmitter<CandyMachine>();
 
+  walletAdapter: Adapter | null = null;
+  rpcEndpoint: string | null = null;
+
   isUploadingAssets: boolean = false;
   uploadingProgress: number = 0;
   isImagesDragged: boolean = false;
@@ -37,11 +42,19 @@ export class InsertCandymachineItemsComponent implements OnInit {
   assets: Map<UploadMetadataInput, File> = new Map();
 
   constructor(
+    private walletService: WalletService,
     private snackService: SnackService,
     private mxService: MetaplexService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.walletService.walletStore$.wallet$.subscribe((wallet) => {
+      this.walletAdapter = wallet?.adapter;
+    });
+    this.walletService.connectionStore$.state$.subscribe((state) => {
+      this.rpcEndpoint = state.endpoint;
+    });
+  }
 
   /*************************************************************************************/
   /******************************** Event handlers *************************************/
@@ -204,6 +217,25 @@ export class InsertCandymachineItemsComponent implements OnInit {
     }
   }
 
+  validateUserConnection(): boolean {
+    // Validate wallet is connected
+    if (this.walletAdapter?.connected && this.walletAdapter?.publicKey) {
+      if (this.rpcEndpoint) {
+        // Validate rpcEndpoint and wallet matches metaplex instance
+        return this.mxService.validateInstance(
+          this.rpcEndpoint,
+          this.walletAdapter
+        );
+      } else {
+        this.snackService.showError('Rpc error, please reload and try again');
+        return false;
+      }
+    } else {
+      this.snackService.showError('Wallet not connected');
+      return false;
+    }
+  }
+
   async getCandyMachine(candyMachineAddress: PublicKey) {
     try {
       const candyMachine = await this.mxService.getCandyMachine(
@@ -243,6 +275,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
     if (this.isUploadingAssets) return;
     if (!this.candyMachine) return;
     if (!this.prepareAssets()) return;
+    if (!this.validateUserConnection()) return;
 
     this.isUploadingAssets = true;
     this.uploadingProgress = 0;
