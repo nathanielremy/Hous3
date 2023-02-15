@@ -4,6 +4,7 @@ import {
   CandyMachineHiddenSettings,
   CandyMachineV2Item,
   UploadMetadataInput,
+  UploadMetadataOutput,
 } from '@metaplex-foundation/js';
 import { Adapter } from '@solana/wallet-adapter-base';
 import { PublicKey } from '@solana/web3.js';
@@ -31,7 +32,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
   walletAdapter: Adapter | null = null;
   rpcEndpoint: string | null = null;
 
-  isUploadingAssets: boolean = false;
+  isInsertingAssets: boolean = false;
   uploadingProgress: number = 0;
   isImagesDragged: boolean = false;
   isJsonsDragged: boolean = false;
@@ -40,6 +41,8 @@ export class InsertCandymachineItemsComponent implements OnInit {
   jsonFiles: Array<File> = [];
   jsonPreviews: Array<UploadMetadataInput> = [];
   assets: Map<UploadMetadataInput, File> = new Map();
+  uploadedItems: Array<CandyMachineV2Item> = [];
+  uploadedMetadata: UploadMetadataOutput | null = null;
 
   constructor(
     private walletService: WalletService,
@@ -60,7 +63,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
   /******************************** Event handlers *************************************/
   /*************************************************************************************/
   onImageFilesSelected(e: any) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     const element = e.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
@@ -70,7 +73,7 @@ export class InsertCandymachineItemsComponent implements OnInit {
   }
 
   onJsonFilesSelected(e: any) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     const element = e.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
@@ -80,31 +83,31 @@ export class InsertCandymachineItemsComponent implements OnInit {
   }
 
   onImageFilesDropped(droppedFiles: FileList) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     this.prepareImageFiles(droppedFiles);
   }
 
   onJsonFilesDropped(droppedFiles: FileList) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     this.prepareJsonFiles(droppedFiles);
   }
 
   toogleImagesDragged(event: boolean) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     this.isImagesDragged = event;
   }
 
   toogleJsonsDragged(event: boolean) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     this.isJsonsDragged = event;
   }
 
   openFileSelector(fileSelector: HTMLInputElement) {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
 
     fileSelector.value = fileSelector.defaultValue;
     fileSelector.click();
@@ -272,98 +275,141 @@ export class InsertCandymachineItemsComponent implements OnInit {
   }
 
   async addAssets() {
-    if (this.isUploadingAssets) return;
+    if (this.isInsertingAssets) return;
     if (!this.candyMachine) return;
     if (!this.prepareAssets()) return;
     if (!this.validateUserConnection()) return;
 
-    this.isUploadingAssets = true;
+    this.isInsertingAssets = true;
     this.uploadingProgress = 0;
 
     if (this.isMultipleFiles) {
-      // Insert CandyMachine's items
-      let index = 0;
-      const items: Array<CandyMachineV2Item> = [];
-      for (const [metadata, imageFile] of this.assets) {
-        const uploadedMetadata = await this.mxService.uploadNftMetadata(
-          metadata,
-          imageFile
-        );
-        if (uploadedMetadata) {
-          items.push({
-            name: uploadedMetadata.metadata.name!,
-            uri: uploadedMetadata.uri,
-          });
-        } else {
-          this.snackService.showError(
-            'Not able to upload NFT metadata. Please try again.'
-          );
-          this.isUploadingAssets = false;
-          return;
-        }
-
-        this.uploadingProgress = 60 * (index / this.assets.size);
-        index++;
-      }
-
-      if (items.length != this.assets.size) {
+      if (
+        this.assets.size >
+        this.candyMachine.itemsAvailable.toNumber() -
+          this.candyMachine.itemsLoaded
+      ) {
         this.snackService.showError(
-          'Failed to upload NFT metadata. Please try again.'
+          `You can not add more than ${
+            this.candyMachine.itemsAvailable.toNumber() -
+            this.candyMachine.itemsLoaded
+          } items.`
         );
-        this.isUploadingAssets = false;
+        this.isInsertingAssets = false;
         return;
       }
 
-      await this.mxService.insertCandyMachineItems(this.candyMachine, items);
-      this.uploadingProgress = 90;
+      // Insert CandyMachine's items
+      if (this.uploadedItems.length == 0) {
+        let index = 1;
+        const assetsArray = Array.from(this.assets, (item) => {
+          return { metadata: item[0], imageFile: item[1] };
+        });
+        while (assetsArray.length > 0) {
+          // Attempt to upload assets continuously
+          const asset = assetsArray.shift();
+          if (asset) {
+            try {
+              const { metadata, imageFile } = asset;
+              const uploadedMetadata = await this.mxService.uploadNftMetadata(
+                metadata,
+                imageFile
+              );
+              if (uploadedMetadata) {
+                this.uploadedItems.push({
+                  name: uploadedMetadata.metadata.name!,
+                  uri: uploadedMetadata.uri,
+                });
+
+                this.uploadingProgress = 60 * (index / this.assets.size);
+                index++;
+              } else {
+                assetsArray.unshift(asset);
+                continue;
+              }
+            } catch (e) {
+              console.log(e);
+              assetsArray.unshift(asset);
+              continue;
+            }
+          }
+        }
+
+        if (this.uploadedItems.length != this.assets.size) {
+          // Never land here
+          this.snackService.showError(
+            'Failed to upload NFT metadata. Please try again.'
+          );
+          this.uploadedItems = [];
+          this.isInsertingAssets = false;
+          return;
+        }
+      } else {
+        // Already uploaded assets
+        this.uploadingProgress = 60;
+      }
+
+      try {
+        await this.mxService.insertCandyMachineItems(
+          this.candyMachine,
+          this.uploadedItems
+        );
+        this.uploadedItems = [];
+        this.uploadingProgress = 90;
+      } catch (e) {
+        console.log(e);
+        this.snackService.showError(
+          'Failed to insert items to Candy Machine. Please try again.'
+        );
+        this.isInsertingAssets = false;
+        return;
+      }
     } else {
       // Update CandyMachine's mint setting
-      for (const [metadata, imageFile] of this.assets) {
-        const uploadedMetadata = await this.mxService.uploadNftMetadata(
+      while (!this.uploadedMetadata) {
+        // Attempt to upload asset continuously
+        const [{ metadata, imageFile }] = Array.from(this.assets, (item) => {
+          return { metadata: item[0], imageFile: item[1] };
+        });
+
+        this.uploadedMetadata = await this.mxService.uploadNftMetadata(
           metadata,
           imageFile
         );
-        if (uploadedMetadata) {
-          this.uploadingProgress = 60;
+      }
 
-          const itemSettings = {
-            type: 'hidden',
-            name: uploadedMetadata.metadata.name!,
-            uri: uploadedMetadata.uri,
-            hash: [
-              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-              1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            ],
-          } as CandyMachineHiddenSettings;
-          const result = await this.mxService.updateCandyMachine(
-            this.candyMachine,
-            { itemSettings }
-          );
-          if (result) {
-            this.uploadingProgress = 90;
-          } else {
-            this.snackService.showError(
-              'Failed to update CandyMachine settings. Please try again.'
-            );
-            this.isUploadingAssets = false;
-            return;
-          }
-        } else {
-          this.snackService.showError(
-            'Not able to upload NFT metadata. Please try again.'
-          );
-          this.isUploadingAssets = false;
-          return;
-        }
+      this.uploadingProgress = 60;
 
-        // Only one item is treated
-        break;
+      const itemSettings = {
+        type: 'hidden',
+        name: this.uploadedMetadata.metadata.name!,
+        uri: this.uploadedMetadata.uri,
+        hash: [
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1,
+        ],
+      } as CandyMachineHiddenSettings;
+
+      const result = await this.mxService.updateCandyMachine(
+        this.candyMachine,
+        { itemSettings }
+      );
+      if (result) {
+        this.uploadedMetadata = null;
+        this.uploadingProgress = 90;
+      } else {
+        this.snackService.showError(
+          'Failed to update Candy Machine settings. Please try again.'
+        );
+        this.isInsertingAssets = false;
+        return;
       }
     }
 
+    // Refresh CandyMachine account
     this.candyMachine = await this.getCandyMachine(this.candyMachine.address);
     this.uploadingProgress = 100;
-    this.isUploadingAssets = false;
+    this.isInsertingAssets = false;
 
     if (!this.candyMachine) {
       this.snackService.showError(
@@ -373,6 +419,19 @@ export class InsertCandymachineItemsComponent implements OnInit {
     }
 
     this.candyMachineEmitter.emit(this.candyMachine);
+
+    this.snackService.showSuccess(
+      `You successfully added ${this.assets.size} items to your Candy Machine.`
+    );
+
+    // Clear cache
+    this.imageFiles = [];
+    this.imagePreviews = [];
+    this.jsonFiles = [];
+    this.jsonPreviews = [];
+    this.assets = new Map();
+    this.uploadedItems = [];
+    this.uploadedMetadata = null;
   }
 
   /*************************************************************************************/

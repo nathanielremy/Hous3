@@ -3,7 +3,7 @@
     <p class="section-title text-center grey">Candy machine not found</p>
   </div>
   <div *ngIf="candyMachine" class="cm-content-container">
-    <div *ngIf="isUploadingAssets" class="progressWrapper">
+    <div *ngIf="isInsertingAssets" class="progressWrapper">
       <app-progress-bar [progress]="uploadingProgress"></app-progress-bar>
     </div>
     <div
@@ -33,9 +33,9 @@
     </div>
 
     <div class="w-full flex justify-center items-center">
-      <button class="button-primary" (click)="addAssets()">
-        <span *ngIf="!isUploadingAssets"> Add Asset(s) </span>
-        <mat-spinner *ngIf="isUploadingAssets" [diameter]="20"></mat-spinner>
+      <button class="button-primary add-assets-button" (click)="addAssets()">
+        <span *ngIf="!isInsertingAssets"> Add Asset(s) </span>
+        <mat-spinner *ngIf="isInsertingAssets" [diameter]="20"></mat-spinner>
       </button>
     </div>
   </div>
