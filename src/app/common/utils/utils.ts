@@ -1,3 +1,4 @@
+import { UploadMetadataInput } from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 
 export const getErrorMessageForCode = (code: String) => {
@@ -80,7 +81,6 @@ export const getFileNameFormatDateStringFromDate = (date: Date) => {
   ].join('')}`;
 };
 
-
 export const timeAgoDisplay = (_date: Date): string => {
   let creationDateStamp = Math.round(_date.getTime());
   let currentDateStamp = Math.floor(Date.now() / 1000);
@@ -137,4 +137,106 @@ export const truncateAddress = (address: string | null | undefined) => {
   const match = address.match(/^([a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/);
   if (!match) return address;
   return `${match[1]}…${match[2]}`;
+};
+
+export const checkJSONObjectIsValidMetadata = (object: any) => {
+  if (!object.name || typeof object.name != 'string') {
+    return null;
+  }
+  if (!object.symbol || typeof object.symbol != 'string') {
+    return null;
+  }
+  if (object.description && typeof object.description != 'string') {
+    return null;
+  }
+  if (
+    object.seller_fee_basis_points != null &&
+    object.seller_fee_basis_points != undefined &&
+    typeof object.seller_fee_basis_points != 'number'
+  ) {
+    return null;
+  }
+  if (!object.image || typeof object.image != 'string') {
+    return null;
+  }
+  if (object.external_url && typeof object.external_url != 'string') {
+    return null;
+  }
+  if (object.attributes) {
+    if (typeof object.attributes != 'object') {
+      return null;
+    }
+    for (let attribute of object.attributes) {
+      if (!attribute.trait_type || typeof attribute.trait_type != 'string') {
+        return null;
+      }
+      if (!attribute.value || typeof attribute.value != 'string') {
+        return null;
+      }
+    }
+  }
+  if (object.properties) {
+    if (typeof object.properties != 'object') {
+      return null;
+    }
+    if (object.properties.creators) {
+      if (typeof object.properties.creators != 'object') {
+        return null;
+      }
+      for (let creator of object.properties.creators) {
+        if (typeof creator != 'object') {
+          return null;
+        }
+        if (!creator.address || typeof creator.address != 'string') {
+          return null;
+        }
+        if (
+          creator.share == null ||
+          creator.share == undefined ||
+          typeof creator.share != 'number'
+        ) {
+          return null;
+        }
+      }
+    } else {
+      return null;
+    }
+    if (object.properties.files) {
+      if (typeof object.properties.files != 'object') {
+        return null;
+      }
+      for (let file of object.properties.files) {
+        if (typeof file != 'object') {
+          return null;
+        }
+        if (!file.type || typeof file.type != 'string') {
+          return null;
+        }
+        if (!file.uri || typeof file.uri != 'string') {
+          return null;
+        }
+      }
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+
+  if (object.collection) {
+    if (typeof object.collection != 'object') {
+      return null;
+    }
+    if (!object.collection.name || typeof object.collection.name != 'string') {
+      return null;
+    }
+    if (
+      !object.collection.family ||
+      typeof object.collection.family != 'string'
+    ) {
+      return null;
+    }
+  }
+
+  return object as UploadMetadataInput;
 };
